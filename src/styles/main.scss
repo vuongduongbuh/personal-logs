@@ -1,6 +1,9 @@
-//import external library
+//Import external library
 @import 'external/bootstrap';
 
-//import custom styles
+//Import custom styles
+@import 'pl-input';
+
+//Import page styles
 @import 'container';
 @import 'feed';
