@@ -1,0 +1,8 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/8a8a1396214462baab5b04c498d3b2d869d4c5ed/auth0.lock/auth0.lock.d.ts",
+    "raw": "registry:dt/auth0.lock#0.0.0+20160919061738",
+    "typings": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/8a8a1396214462baab5b04c498d3b2d869d4c5ed/auth0.lock/auth0.lock.d.ts"
+  }
+}

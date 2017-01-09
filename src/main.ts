@@ -14,7 +14,6 @@ export function configure(aurelia: Aurelia) {
     .standardConfiguration()
     .feature('resources');
   
-  console.log(aurelia);
   if (environment.debug) {
     aurelia.use.developmentLogging();
   }
