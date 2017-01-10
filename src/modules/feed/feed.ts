@@ -8,6 +8,8 @@ export class Feed {
   feedService: any;
   feeds: Object[];
   selectedFeed: Object;
+  isInputOnFocus: boolean;
+  inputNewFeed: "";
   constructor(FeedService) {
     this.feedService = FeedService;
     this.feeds = [{ value: 1 }, { value: 2 }, { value: 3 }, { value: 4 }];
@@ -20,5 +22,13 @@ export class Feed {
     });
 
     this.feeds[idx]['isSelected'] = true;
+  }
+
+  isInputChange() {
+    this.isInputOnFocus = true;
+  }
+
+  addNewFeed() {
+    console.log(this.inputNewFeed);
   }
 }

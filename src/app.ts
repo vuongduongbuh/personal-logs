@@ -9,7 +9,7 @@ export class App {
   appTitle: string;
 
   constructor(AuthService) {
-    AuthService.init();
+    //AuthService.init();
   }
 
   configureRouter(config, router) {

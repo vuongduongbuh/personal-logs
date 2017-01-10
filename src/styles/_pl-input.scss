@@ -4,6 +4,7 @@
     border: 2px solid #55D2FB;
     padding: 5px;
     padding-left: 15px;
+    resize: none;
 
     &::focus {
         border: 2px solid #55D2FB !important;
@@ -31,8 +32,23 @@
             font-weight: bold;
         }
     }
+    &--on-focus {
+        height: 80px;
+    }
 
     &--search {
         padding-left: 40px;
     }
+}
+.pl-button {
+    float: right;
+    clear: right;
+    height: 40px;
+    width: 75px;
+    border-radius: 10px;
+    background-color: #55D2FB;
+    margin: 5px 0;
+    border: none;
+    color: #fff;
+    outline: none;
 }

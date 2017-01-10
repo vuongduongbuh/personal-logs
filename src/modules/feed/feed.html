@@ -1,8 +1,10 @@
 <template>
   <div class="pl-feed">
-    <div class="pl-feed__post">
-      <input placeholder="What's on your mind?" class="pl-input pl-input--blue">
+    <div class="pl-feed__post ${isInputOnFocus ? 'pl-feed__post--on-focus': ''}">
+      <textarea value.bind="inputNewFeed" placeholder="What's on your mind?" class="pl-input pl-input--blue ${isInputOnFocus ? 'pl-input--on-focus': ''}" click.trigger="isInputChange()"> </textarea>
       <img src="./assets/img/camera.png">
+
+      <button class="pl-button" click.trigger="addNewFeed()" if.bind="isInputOnFocus">Done</button>
     </div>
 
     <div class="pl-feed__feed ${feed.isSelected ? 'selected': ''}" repeat.for="feed of feeds" click.trigger="selectFeed($index)">
