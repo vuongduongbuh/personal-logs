@@ -2,8 +2,58 @@ define('app-constant',["require", "exports"], function (require, exports) {
     "use strict";
     exports.AppConstants = {
         auth0Domain: 'nowatwork.eu.auth0.com/api/v2/',
-        auth0ClientId: '3q9JMsbrFjOk43JLgF4jgh5KapusR42c'
+        auth0ClientId: '3q9JMsbrFjOk43JLgF4jgh5KapusR42c',
+        baseUrl: "localhost:3008/"
     };
+});
+
+define('services/authService/auth-service',["require", "exports"], function (require, exports) {
+    "use strict";
+    var AuthService = (function () {
+        function AuthService() {
+            var _this = this;
+            this.isAuthenticated = false;
+            this.auth0lock = {};
+            this.auth0lockPasswordless = {};
+            this.auth0Options = {
+                closable: false,
+                language: 'de',
+                theme: {
+                    logo: '/assets/img/icon-naw.jpg',
+                    primaryColor: '#D11E33'
+                },
+                languageDictionary: {
+                    emailInputPlaceholder: "max.meier@nowatwork.ch",
+                    title: "now@work",
+                    forgotPasswordAction: "Passwort vergessen? Zum ersten Mal hier?"
+                },
+                auth: {
+                    responseType: 'token',
+                    redirect: false,
+                    params: {
+                        scope: 'openid picture email name nickname auth'
+                    }
+                }
+            };
+            this.auth0lock = new Auth0Lock('G4wIF5AYeG9Dtu4Y5yuOuXFrUYUzfLVu', 'personallog.eu.auth0.com');
+            this.auth0lock.on("authenticated", function (authResult) {
+                _this.auth0lock.getProfile(authResult.idToken, function (error, profile) {
+                    if (error) {
+                        return;
+                    }
+                    localStorage.setItem('id_token', authResult.idToken);
+                    localStorage.setItem('profile', JSON.stringify(profile));
+                    _this.isAuthenticated = true;
+                    _this.auth0lock.hide();
+                });
+            });
+        }
+        AuthService.prototype.init = function () {
+            this.auth0lock.show();
+        };
+        return AuthService;
+    }());
+    exports.AuthService = AuthService;
 });
 
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -79,13 +129,21 @@ define('resources/index',["require", "exports"], function (require, exports) {
     exports.configure = configure;
 });
 
-define('modules/feed/feed-service',["require", "exports"], function (require, exports) {
+define('modules/feed/feed-service',["require", "exports", "../../app-constant", "aurelia-fetch-client"], function (require, exports, app_constant_1, aurelia_fetch_client_1) {
     "use strict";
     var FeedService = (function () {
         function FeedService() {
         }
         FeedService.prototype.getFeeds = function () {
-            return [true, true, true];
+            var client = new aurelia_fetch_client_1.HttpClient();
+            console.log(client);
+            client.fetch(app_constant_1.AppConstants.baseUrl + "api/v1/posts", {
+                method: "get"
+            })
+                .then(function (data) {
+                console.log(data);
+                return data;
+            });
         };
         return FeedService;
     }());
@@ -131,55 +189,6 @@ define('modules/search/search',["require", "exports"], function (require, export
         return Search;
     }());
     exports.Search = Search;
-});
-
-define('services/authService/auth-service',["require", "exports"], function (require, exports) {
-    "use strict";
-    var AuthService = (function () {
-        function AuthService() {
-            var _this = this;
-            this.isAuthenticated = false;
-            this.auth0lock = {};
-            this.auth0lockPasswordless = {};
-            this.auth0Options = {
-                closable: false,
-                language: 'de',
-                theme: {
-                    logo: '/assets/img/icon-naw.jpg',
-                    primaryColor: '#D11E33'
-                },
-                languageDictionary: {
-                    emailInputPlaceholder: "max.meier@nowatwork.ch",
-                    title: "now@work",
-                    forgotPasswordAction: "Passwort vergessen? Zum ersten Mal hier?"
-                },
-                auth: {
-                    responseType: 'token',
-                    redirect: false,
-                    params: {
-                        scope: 'openid picture email name nickname auth'
-                    }
-                }
-            };
-            this.auth0lock = new Auth0Lock('G4wIF5AYeG9Dtu4Y5yuOuXFrUYUzfLVu', 'personallog.eu.auth0.com');
-            this.auth0lock.on("authenticated", function (authResult) {
-                _this.auth0lock.getProfile(authResult.idToken, function (error, profile) {
-                    if (error) {
-                        return;
-                    }
-                    localStorage.setItem('id_token', authResult.idToken);
-                    localStorage.setItem('profile', JSON.stringify(profile));
-                    _this.isAuthenticated = true;
-                    _this.auth0lock.hide();
-                });
-            });
-        }
-        AuthService.prototype.init = function () {
-            this.auth0lock.show();
-        };
-        return AuthService;
-    }());
-    exports.AuthService = AuthService;
 });
 
 define('text!app.html', ['module'], function(module) { module.exports = "<template>\n  <require from=\"./styles/main.css\"></require>\n\n  <div class=\"row pl-container\">\n    <div class=\"col-md-2 pl-container__logo\">\n      <img src=\"./assets/img/headbits-logo.png\">\n      <span>headbits</span>\n\n    </div>\n\n    <div class=\"col-md-8 pl-container__view\">\n      <router-view></router-view>\n    </div>\n\n    <div class=\"col-md-2 pl-container__user\">\n      <img src=\"./assets/img/profile.jpg\">\n    </div>\n  </div>\n\n</template>"; });

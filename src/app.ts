@@ -1,5 +1,4 @@
 import { inject } from 'aurelia-framework';
-//import {HttpClient} from 'aurelia-fetch-client';
 import { Router } from 'aurelia-router';
 import { AppConstants } from './app-constant';
 import { AuthService } from './services/authService/auth-service';
