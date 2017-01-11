@@ -1,4 +1,5 @@
 <template>
+
   <div class="pl-feed">
     <div class="pl-feed__post ${isInputOnFocus ? 'pl-feed__post--on-focus': ''}">
       <textarea value.bind="inputNewFeed" placeholder="What's on your mind?" class="pl-input pl-input--blue ${isInputOnFocus ? 'pl-input--on-focus': ''}" click.trigger="isInputChange()"> </textarea>
@@ -7,11 +8,11 @@
       <button class="pl-button" click.trigger="addNewFeed()" if.bind="isInputOnFocus">Done</button>
     </div>
 
-    <div class="pl-feed__feed ${feed.isSelected ? 'selected': ''}" repeat.for="feed of feeds" click.trigger="selectFeed($index)">
-      <p class="pl-feed__feed--content">Twitter IPO Roadshow Video https://youtu.be/15u2G-L07x8</p>
-      <p class="pl-feed__feed--date">22:23 PM – 14 Dec 2016</p>
+    <div class="pl-feed__feed ${feed.isSelected ? 'selected': ''}" repeat.for="feed of feeds"click.trigger="selectFeed($index, $event)">
+      <p class="pl-feed__feed--content" innerHTML.bind="feed.text"></p>
+      <p class="pl-feed__feed--date">${feed.createdAt}</p>
 
-      <a if.bind="feed.isSelected">Delete permanently</a>
+      <a class="pl-feed__feed--delete" if.bind="feed.isSelected">Delete permanently</a>
     </div>
   </div>
 
