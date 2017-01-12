@@ -1,17 +1,11 @@
 import { AppConstants } from '../../app-constant';
 import { HttpClient, json } from 'aurelia-fetch-client';
 
-export class FeedService {
+export class SearchService {
 
   httpClient: any;
   constructor() {
     this.httpClient = new HttpClient();
-  }
-
-  getFeeds() {
-    return this.httpClient.fetch(AppConstants.baseUrl + "api/v1/feeds", {
-      method: "get"
-    }).then(data => data.json());
   }
 
   createNewFeed(feed) {

@@ -8,9 +8,11 @@ export class Feed {
 
   feedService: any;
   feeds: Object[];
+  newFeed: Object;
   selectedFeed: Object;
   isInputOnFocus: boolean;
   inputNewFeed: "";
+  selectedFiles: any;
   constructor(FeedService) {
 
     let autolikerOptions = { newWindow: true, truncate: 25, hashtag: 'twitter' };
@@ -20,7 +22,7 @@ export class Feed {
         this.feeds = data;
         _.forEach(this.feeds, (value) => {
           console.log(value);
-          value.text = Autolinker.link("Đây là #google #Iphone5", autolikerOptions);
+          value.text = Autolinker.link(value.text, autolikerOptions);
           value.createdAt = new Date();
         })
       })
@@ -42,13 +44,21 @@ export class Feed {
     this.isInputOnFocus = true;
   }
 
-  addNewFeed() {
-    console.log(this.inputNewFeed);
+  uploadFiles() {
+    let input = document.getElementById("pl-input--files");
 
-    this.feedService.createNewFeed({
-      text: this.inputNewFeed
-    }).then(data => {
-      console.log(data);
-    })
+    input.click();
+  }
+
+  addNewFeed() {
+    if (this.selectedFiles) {
+      this.newFeed['media'] = this.selectedFiles[0];
+    }
+
+    console.log(this.newFeed);
+    this.feedService.createNewFeed(this.newFeed)
+      .then(data => {
+        console.log(data);
+      });
   }
 }

@@ -1,9 +1,9 @@
 <template>
-
+  <input type="file" files.bind="selectedFiles" id="pl-input--files">
   <div class="pl-feed">
     <div class="pl-feed__post ${isInputOnFocus ? 'pl-feed__post--on-focus': ''}">
-      <textarea value.bind="inputNewFeed" placeholder="What's on your mind?" class="pl-input pl-input--blue ${isInputOnFocus ? 'pl-input--on-focus': ''}" click.trigger="isInputChange()"> </textarea>
-      <img src="./assets/img/camera.png">
+      <textarea value.bind="newFeed.text" placeholder="What's on your mind?" class="pl-input pl-input--blue ${isInputOnFocus ? 'pl-input--on-focus': ''}" click.trigger="isInputChange()"> </textarea>
+      <img src="./assets/img/camera.png" click.trigger="uploadFiles()">
 
       <button class="pl-button" click.trigger="addNewFeed()" if.bind="isInputOnFocus">Done</button>
     </div>

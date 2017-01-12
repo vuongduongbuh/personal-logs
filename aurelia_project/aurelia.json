@@ -140,6 +140,11 @@
             "name": "lodash",
             "path": "../node_modules/lodash",
             "main": "lodash.min"
+          },
+          {
+            "name": "aurelia-http-client",
+            "path": "../node_modules/aurelia-http-client/dist/amd",
+            "main": "aurelia-http-client"
           }
         ]
       }
