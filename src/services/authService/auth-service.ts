@@ -1,3 +1,5 @@
+import * as jwt_decode from 'jwt-decode';
+
 export class AuthService {
   isAuthenticated = false;
   auth0lock: any;
@@ -43,7 +45,42 @@ export class AuthService {
     });
   }
 
-  init() {
+  login() {
     this.auth0lock.show();
+  }
+
+  logout() {
+    localStorage.removeItem('profile');
+    localStorage.removeItem('id_token');
+    this.isAuthenticated = false;
+  }
+
+  tokenIsExpired(token) {
+    let jwt = token;
+    if (jwt) {
+      let jwtExp = jwt_decode(jwt).exp;
+      let expiryDate = new Date(0);
+      expiryDate.setUTCSeconds(jwtExp);
+
+      if (new Date() < expiryDate) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  isTokenValid() {
+    let token = localStorage.getItem('id_token');
+    if (!token) {
+      return false
+    }
+
+    let isExpired = this.tokenIsExpired(token);
+    if (!isExpired) {
+      return true;
+    }
+
+    return false;
   }
 }

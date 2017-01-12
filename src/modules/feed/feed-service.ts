@@ -1,11 +1,15 @@
 import { AppConstants } from '../../app-constant';
-import { HttpClient, json } from 'aurelia-fetch-client';
+import { HttpClient, json, Interceptor } from 'aurelia-fetch-client';
 
 export class FeedService {
 
   httpClient: any;
   constructor() {
     this.httpClient = new HttpClient();
+
+    this.httpClient.configure(config => {
+      config.withInterceptor(new SimpleInterceptor());
+    });
   }
 
   getFeeds() {
@@ -22,5 +26,17 @@ export class FeedService {
       method: 'post',
       body: form
     })
+  }
+}
+
+export class SimpleInterceptor implements Interceptor {
+  request(request: Request) {
+    console.log(`I am inside of the interceptor doing a new request to ${request.url}`);
+    return request;
+  }
+
+  responseError(response: Response) {
+    console.log('Some error has occured! Run!')
+    return response;
   }
 }

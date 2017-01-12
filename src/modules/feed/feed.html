@@ -7,8 +7,8 @@
 
       <button class="pl-button" click.trigger="addNewFeed()" if.bind="isInputOnFocus">Done</button>
     </div>
-
-    <div class="pl-feed__feed ${feed.isSelected ? 'selected': ''}" repeat.for="feed of feeds"click.trigger="selectFeed($index, $event)">
+    
+    <div class="pl-feed__feed ${feed.isSelected ? 'selected': ''}" repeat.for="feed of feeds" mouseover.delegate="selectFeed($index, $event)">
       <p class="pl-feed__feed--content" innerHTML.bind="feed.text"></p>
       <p class="pl-feed__feed--date">${feed.createdAt}</p>
 

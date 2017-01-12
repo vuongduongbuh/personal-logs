@@ -17,6 +17,14 @@ export class Feed {
 
     let autolikerOptions = { newWindow: true, truncate: 25, hashtag: 'twitter' };
     this.feedService = FeedService;
+
+    this.feeds = [{ text: "Đây là trang google.com" }, { text: "#aaaa vuongduongbuh@gmail.com  aaaa" }];
+
+    _.forEach(this.feeds, (value) => {
+      console.log(value);
+      value.text = Autolinker.link(value.text, autolikerOptions);
+      value.createdAt = new Date();
+    })
     this.feedService.getFeeds()
       .then(data => {
         this.feeds = data;
@@ -29,15 +37,18 @@ export class Feed {
   }
 
   selectFeed(idx, $event) {
-
     this.feeds.forEach((value) => {
       value['isSelected'] = false;
     });
 
     this.feeds[idx]['isSelected'] = true;
-
     $event.stopPropagation();
+  }
 
+  unselectFeed() {
+    this.feeds.forEach((value) => {
+      value['isSelected'] = false;
+    });
   }
 
   isInputChange() {
@@ -46,7 +57,6 @@ export class Feed {
 
   uploadFiles() {
     let input = document.getElementById("pl-input--files");
-
     input.click();
   }
 

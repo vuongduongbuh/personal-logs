@@ -8,13 +8,11 @@ export class SearchService {
     this.httpClient = new HttpClient();
   }
 
-  createNewFeed(feed) {
-    let form = new FormData()
-    form.append('text', feed.text)
-
-    return this.httpClient.fetch(AppConstants.baseUrl + "api/v1/feeds", {
-      method: 'post',
-      body: form
-    })
+  search(input) {
+    console.log(input);
+    // return this.httpClient.fetch(AppConstants.baseUrl + "api/v1/search", {
+    //   method: 'post',
+    //   body: form
+    // })
   }
 }
