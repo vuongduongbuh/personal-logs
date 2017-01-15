@@ -1,23 +1,31 @@
 <template>
   <input type="file" files.bind="selectedFiles" id="pl-input--files">
   <div class="pl-feed">
-    <div class="pl-feed__post ${isInputOnFocus ? 'pl-feed__post--on-focus': ''}">
-      <textarea value.bind="newFeed.text" placeholder="What's on your mind?" class="pl-input pl-input--blue ${isInputOnFocus ? 'pl-input--on-focus': ''}" click.trigger="isInputChange()"> </textarea>
-      <img src="./assets/img/camera.png" click.trigger="uploadFiles()">
 
+    <div class="pl-feed__post  pl-feed__post--search" if.bind="isSearchButtonClick">
+      <input placeholder="Search" value.bind="searchValue" change.delegate="search()" class="pl-input pl-input--search">
+      <img src="./assets/img/search.png">
+    </div>
+
+    <div class="pl-feed__post ${isInputOnFocus ? 'pl-feed__post--on-focus': ''}" if.bind="!isSearchButtonClick">
+      <textarea value.bind="newFeed.text" placeholder="What's on your mind?" class="pl-input pl-input--blue ${isInputOnFocus ? 'pl-input--on-focus': ''}" click.trigger="isInputChange()"> </textarea>
+      <img src="./assets/img/camera.png" click.trigger="triggerClickInputFiles()">
+      
       <button class="pl-button" click.trigger="addNewFeed()" if.bind="isInputOnFocus">Done</button>
     </div>
     
     <div class="pl-feed__feed ${feed.isSelected ? 'selected': ''}" repeat.for="feed of feeds" mouseover.delegate="selectFeed($index, $event)">
       <p class="pl-feed__feed--content" innerHTML.bind="feed.text"></p>
-      <p class="pl-feed__feed--date">${feed.createdAt}</p>
 
-      <a class="pl-feed__feed--delete" if.bind="feed.isSelected">Delete permanently</a>
+      <iframe if.bind="feed.videoUrl" width="650" height="400" src.bind="feed.videoUrl"></iframe>
+
+      <p class="pl-feed__feed--date">${feed.createdAt}</p>
+      <a class="pl-feed__feed--delete" if.bind="feed.isSelected" click.trigger="deleteFeed(feed.id, $index)">Delete permanently</a>
     </div>
   </div>
 
-  <div class="pl-search">
-    <a href="#/search">
+  <div class="pl-search" if.bind="!isSearchButtonClick">
+    <a click.trigger="triggerSearchModule()">
       <img src="./assets/img/search.png">
       <span>Search</span>
     </a>

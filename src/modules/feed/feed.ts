@@ -1,38 +1,48 @@
 import { inject } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { FeedService } from './feed-service';
+import { AppService } from '../../app-service';
+
+import * as Autolinker from "autolinker";
 import * as _ from 'lodash';
 
-@inject(FeedService)
+@inject(AppService)
 export class Feed {
 
-  feedService: any;
+  appService: any;
   feeds: Object[];
   newFeed: Object;
   selectedFeed: Object;
   isInputOnFocus: boolean;
   inputNewFeed: "";
+  isSearchButtonClick: boolean;
   selectedFiles: any;
-  constructor(FeedService) {
+  searchValue: "";
+  autolikerOptions: {};
+  constructor(AppService) {
 
-    let autolikerOptions = { newWindow: true, truncate: 25, hashtag: 'twitter' };
-    this.feedService = FeedService;
+    this.autolikerOptions = { newWindow: true, truncate: 25, hashtag: 'twitter' };
+    this.appService = AppService;
 
-    this.feeds = [{ text: "Đây là trang google.com" }, { text: "#aaaa vuongduongbuh@gmail.com  aaaa" }];
+    this.getFeeds();
 
-    _.forEach(this.feeds, (value) => {
-      console.log(value);
-      value.text = Autolinker.link(value.text, autolikerOptions);
-      value.createdAt = new Date();
-    })
-    this.feedService.getFeeds()
-      .then(data => {
+  }
+
+  getFeeds() {
+    this.appService.getFeeds()
+      .then((data) => {
         this.feeds = data;
         _.forEach(this.feeds, (value) => {
-          console.log(value);
-          value.text = Autolinker.link(value.text, autolikerOptions);
-          value.createdAt = new Date();
-        })
+
+          value['videoUrl'] = this.parseStringToVideoUrl(value.text);
+
+          if (value.videoUrl) {
+            value.text = _.replace(value.text, value.videoUrl, "");
+          }
+
+          value.text = Autolinker.link(value.text, this.autolikerOptions);
+        });
+
+        return this.feeds;
       })
   }
 
@@ -45,30 +55,90 @@ export class Feed {
     $event.stopPropagation();
   }
 
-  unselectFeed() {
-    this.feeds.forEach((value) => {
-      value['isSelected'] = false;
-    });
+  deleteFeed(id, idx) {
+    console.log(id, idx);
+    this.appService.deleteFeed(id)
+      .then((data) => {
+        this.feeds.splice(idx, 1);
+      })
   }
 
   isInputChange() {
     this.isInputOnFocus = true;
   }
 
-  uploadFiles() {
+  triggerClickInputFiles() {
     let input = document.getElementById("pl-input--files");
     input.click();
   }
 
   addNewFeed() {
     if (this.selectedFiles) {
-      this.newFeed['media'] = this.selectedFiles[0];
+      this.newFeed['file'] = this.selectedFiles[0];
     }
 
-    console.log(this.newFeed);
-    this.feedService.createNewFeed(this.newFeed)
+    this.appService.createNewFeed(this.newFeed)
       .then(data => {
-        console.log(data);
+        this.isInputOnFocus = false;
+        data['videoUrl'] = this.parseStringToVideoUrl(data.text);
+
+        if (data.videoUrl) {
+          data.text = _.replace(data.text, data.videoUrl, "");
+        }
+
+        data.text = Autolinker.link(data.text, this.autolikerOptions);
+
+        this.feeds.unshift(data);
+        this.newFeed = {};
       });
   }
+
+  search() {
+    this.appService.search(this.searchValue)
+      .then((data) => {
+        this.feeds = data;
+        _.forEach(this.feeds, (value) => {
+          value.text = Autolinker.link(value.text, this.autolikerOptions);
+        })
+      })
+  }
+
+  triggerSearchModule() {
+    this.isSearchButtonClick = true;
+    this.feeds = [];
+  }
+
+  parseStringToVideoUrl(string) {
+    let autoLinker = new Autolinker();
+    let resultUrl = null;
+    let containYoutubeLink = false;
+    let containVimeoLink = false;
+    let autoLinkerParser = autoLinker.parse(string);
+
+    _.forEach(autoLinkerParser, (value) => {
+      if (value.url) {
+        containYoutubeLink = value.url.includes("youtube.com");
+        containVimeoLink = value.url.includes("vimeo.com");
+        if (containYoutubeLink || containVimeoLink) {
+          resultUrl = value.url;
+          return true;
+        }
+      }
+    });
+
+    if (containYoutubeLink) {
+
+    }
+
+    if (containVimeoLink) {
+      resultUrl = _.replace(resultUrl, "/vimeo.com/", "/player.vimeo.com/video/");
+    }
+
+    return resultUrl;
+  }
+
+  // isValidYoutube(url) {
+  //   var p = /^(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?(?=.*v=((\w|-){11}))(?:\S+)?$/;
+  //   return (url.match(p)) ? RegExp.$1 : false;
+  // }
 }

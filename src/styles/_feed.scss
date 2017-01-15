@@ -12,10 +12,19 @@
       height: 30px;
       right: 25px;
       top: 20px;
+      cursor: pointer;
     }
 
     &--on-focus {
         height: 160px;
+    }
+
+    &--search {
+      img {
+        height: 20px;
+        left: 25px;
+        top: 27px;
+      }
     }
   }
 
@@ -59,14 +68,6 @@
 
     &.selected {
       border: 1px solid #A6AAA9;
-    }
-  }
-
-  &--search {
-    img {
-      height: 20px;
-      left: 25px;
-      top: 27px;
     }
   }
 }
