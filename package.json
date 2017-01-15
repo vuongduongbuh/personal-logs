@@ -12,6 +12,7 @@
     "aurelia-animator-css": "^1.0.0",
     "aurelia-auth": "github:paulvanbladel/aureliauth",
     "aurelia-bootstrapper": "^1.0.0",
+    "aurelia-dialog": "^1.0.0-beta.3.0.1",
     "aurelia-fetch-client": "^1.1.0",
     "aurelia-http-client": "^1.0.4",
     "autolinker": "^1.4.0",

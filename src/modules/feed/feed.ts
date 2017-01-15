@@ -1,14 +1,16 @@
 import { inject } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { AppService } from '../../app-service';
-
+import { DialogService } from 'aurelia-dialog';
+import { Modal } from './modal';
 import * as Autolinker from "autolinker";
 import * as _ from 'lodash';
 
-@inject(AppService)
+@inject(AppService, DialogService)
 export class Feed {
 
   appService: any;
+  dialogService: any;
   feeds: Object[];
   newFeed: Object;
   selectedFeed: Object;
@@ -18,15 +20,21 @@ export class Feed {
   selectedFiles: any;
   searchValue: "";
   autolikerOptions: {};
-  constructor(AppService) {
-
+  constructor(appService, dialogService) {
     this.autolikerOptions = { newWindow: true, truncate: 25, hashtag: 'twitter' };
-    this.appService = AppService;
-
+    this.appService = appService;
+    this.dialogService = dialogService;
     this.getFeeds();
-
   }
 
+  showModalConfirmDelete(id, idx) {
+    this.dialogService.open({ viewModel: Modal}).then(response => {
+      if (!response.wasCancelled) {
+        this.deleteFeed(id, idx);
+      }
+
+    });
+  }
   getFeeds() {
     this.appService.getFeeds()
       .then((data) => {
@@ -127,7 +135,7 @@ export class Feed {
     });
 
     if (containYoutubeLink) {
-
+      resultUrl = _.replace(resultUrl, "watch?v=", "v/");
     }
 
     if (containVimeoLink) {
@@ -136,9 +144,4 @@ export class Feed {
 
     return resultUrl;
   }
-
-  // isValidYoutube(url) {
-  //   var p = /^(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?(?=.*v=((\w|-){11}))(?:\S+)?$/;
-  //   return (url.match(p)) ? RegExp.$1 : false;
-  // }
 }

@@ -20,7 +20,7 @@
       <iframe if.bind="feed.videoUrl" width="650" height="400" src.bind="feed.videoUrl"></iframe>
 
       <p class="pl-feed__feed--date">${feed.createdAt}</p>
-      <a class="pl-feed__feed--delete" if.bind="feed.isSelected" click.trigger="deleteFeed(feed.id, $index)">Delete permanently</a>
+      <a class="pl-feed__feed--delete" if.bind="feed.isSelected" click.trigger="showModalConfirmDelete(feed.id, $index)">Delete permanently</a>
     </div>
   </div>
 

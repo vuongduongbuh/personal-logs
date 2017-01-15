@@ -150,6 +150,11 @@
             "name": "autolinker",
             "path": "../node_modules/autolinker/dist",
             "main": "Autolinker.min"
+          },
+          {
+            "name": "aurelia-dialog",
+            "path": "../node_modules/aurelia-dialog/dist/amd",
+            "main": "aurelia-dialog"
           }
         ]
       }
