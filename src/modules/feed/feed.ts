@@ -2,7 +2,9 @@ import { inject } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { AppService } from '../../app-service';
 import { DialogService } from 'aurelia-dialog';
+import { AppConstants } from '../../app-constant';
 import { Modal } from './modal';
+import * as moment from 'moment';
 import * as Autolinker from "autolinker";
 import * as _ from 'lodash';
 
@@ -18,39 +20,71 @@ export class Feed {
   inputNewFeed: "";
   isSearchButtonClick: boolean;
   selectedFiles: any;
+  isFileSelected: boolean;
   searchValue: "";
   autolikerOptions: {};
   constructor(appService, dialogService) {
-    this.autolikerOptions = { newWindow: true, truncate: 25, hashtag: 'twitter' };
+    this.autolikerOptions = { newWindow: true, truncate: 60, className: 'pl-hashtag' };
     this.appService = appService;
     this.dialogService = dialogService;
     this.getFeeds();
   }
 
-  showModalConfirmDelete(id, idx) {
-    this.dialogService.open({ viewModel: Modal}).then(response => {
-      if (!response.wasCancelled) {
-        this.deleteFeed(id, idx);
-      }
-
-    });
-  }
   getFeeds() {
     this.appService.getFeeds()
       .then((data) => {
         this.feeds = data;
         _.forEach(this.feeds, (value) => {
-
-          value['videoUrl'] = this.parseStringToVideoUrl(value.text);
-
-          if (value.videoUrl) {
-            value.text = _.replace(value.text, value.videoUrl, "");
-          }
-
-          value.text = Autolinker.link(value.text, this.autolikerOptions);
+          value = this.convertFeedToView(value);
         });
 
         return this.feeds;
+      })
+  }
+
+  showModalConfirmDelete(id, idx) {
+    this.dialogService.open({ viewModel: Modal }).then(response => {
+      if (!response.wasCancelled) {
+        this.deleteFeed(id, idx);
+      }
+    });
+  }
+
+  deleteFeed(id, idx) {
+    this.appService.deleteFeed(id)
+      .then((data) => {
+        this.feeds.splice(idx, 1);
+      });
+  }
+
+  addNewFeed() {
+    if (this.selectedFiles) {
+      this.newFeed['file'] = this.selectedFiles[0];
+      this.newFeed['tags'] += "image";
+    }
+
+    if (this.parseStringToVideoUrl(this.newFeed['text'])) {
+      this.newFeed['tags'] = " video";
+    }
+
+    this.appService.createNewFeed(this.newFeed)
+      .then(data => {
+        this.isInputOnFocus = false;
+        this.isFileSelected = false;
+        this.selectedFiles = null;
+        data = this.convertFeedToView(data);
+        this.feeds.unshift(data);
+        this.newFeed = {};
+      });
+  }
+
+  search() {
+    this.appService.search(this.searchValue)
+      .then((data) => {
+        this.feeds = data;
+        _.forEach(this.feeds, (value) => {
+          value = this.convertFeedToView(value);
+        });
       })
   }
 
@@ -63,52 +97,37 @@ export class Feed {
     $event.stopPropagation();
   }
 
-  deleteFeed(id, idx) {
-    console.log(id, idx);
-    this.appService.deleteFeed(id)
-      .then((data) => {
-        this.feeds.splice(idx, 1);
-      })
-  }
-
-  isInputChange() {
-    this.isInputOnFocus = true;
-  }
-
   triggerClickInputFiles() {
     let input = document.getElementById("pl-input--files");
     input.click();
+    this.isInputOnFocus = true;
   }
 
-  addNewFeed() {
-    if (this.selectedFiles) {
-      this.newFeed['file'] = this.selectedFiles[0];
+  undoSelectedFiles() {
+    this.selectedFiles = null;
+    this.isFileSelected = false;
+  }
+
+  reloadNewFeeds() {
+    this.getFeeds();
+    this.isSearchButtonClick = false;
+  }
+
+  convertFeedToView(feed) {
+    if (feed.media) {
+      feed.media = AppConstants.assetsUrl + feed.media;
+    } else {
+      feed['videoUrl'] = this.parseStringToVideoUrl(feed.text);
+      if (feed.videoUrl) {
+        feed.text = _.replace(feed.text, "watch?v=", "v/");
+        feed.text = _.replace(feed.text, feed.videoUrl, "");
+      }
     }
 
-    this.appService.createNewFeed(this.newFeed)
-      .then(data => {
-        this.isInputOnFocus = false;
-        data['videoUrl'] = this.parseStringToVideoUrl(data.text);
+    feed.createdAt = moment(feed.createdAt).format('h:mm A - Do MMM YYYY');
+    feed.text = Autolinker.link(feed.text, this.autolikerOptions);
 
-        if (data.videoUrl) {
-          data.text = _.replace(data.text, data.videoUrl, "");
-        }
-
-        data.text = Autolinker.link(data.text, this.autolikerOptions);
-
-        this.feeds.unshift(data);
-        this.newFeed = {};
-      });
-  }
-
-  search() {
-    this.appService.search(this.searchValue)
-      .then((data) => {
-        this.feeds = data;
-        _.forEach(this.feeds, (value) => {
-          value.text = Autolinker.link(value.text, this.autolikerOptions);
-        })
-      })
+    return feed;
   }
 
   triggerSearchModule() {
@@ -122,7 +141,6 @@ export class Feed {
     let containYoutubeLink = false;
     let containVimeoLink = false;
     let autoLinkerParser = autoLinker.parse(string);
-
     _.forEach(autoLinkerParser, (value) => {
       if (value.url) {
         containYoutubeLink = value.url.includes("youtube.com");

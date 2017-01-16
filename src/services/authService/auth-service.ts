@@ -1,6 +1,7 @@
 import { inject } from 'aurelia-framework';
 import * as jwt_decode from 'jwt-decode';
 import { Router, Redirect } from 'aurelia-router';
+import { AppConstants } from '../../app-constant';
 
 @inject(Router)
 export class AuthService {
@@ -32,7 +33,7 @@ export class AuthService {
       }
     };
 
-    this.auth0lock = new Auth0Lock('G4wIF5AYeG9Dtu4Y5yuOuXFrUYUzfLVu', 'personallog.eu.auth0.com');
+    this.auth0lock = new Auth0Lock(AppConstants.auth0ClientId, AppConstants.auth0Domain);
 
     //register callback
     this._registerAuthenticationListener();
@@ -83,15 +84,7 @@ export class AuthService {
     });
   }
 
-  // isAuthenticated() {
-  //   return this.isTokenValid()
-  //     .then(() => {
-  //       console.log("Token is valid");
-  //     });
-  // }
-
   showLoginIfUnauthorized() {
-
     this.isTokenValid().then(() => {
       this.router.navigate('feeds');
     }).catch((error) => {

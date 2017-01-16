@@ -16,6 +16,7 @@
     "aurelia-fetch-client": "^1.1.0",
     "aurelia-http-client": "^1.0.4",
     "autolinker": "^1.4.0",
+    "bluebird": "^3.4.7",
     "bootstrap-sass": "^3.3.7",
     "jwt-decode": "^2.1.0",
     "lodash": "^4.17.4",

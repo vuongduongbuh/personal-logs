@@ -58,7 +58,7 @@ export class AppService {
     }
 
     search(input) {
-        return this.httpClient.fetch("feeds/" + encodeURI(input), {
+        return this.httpClient.fetch("feeds/" + encodeURIComponent(input), {
             method: 'get'
         }).then(data => data.json());
     }
