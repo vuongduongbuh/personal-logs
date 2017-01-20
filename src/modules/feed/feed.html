@@ -5,7 +5,8 @@
     <div class="pl-feed__post  pl-feed__post--search" if.bind="isSearchButtonClick">
       <input placeholder="Search" value.bind="searchValue" change.delegate="search()" class="pl-input pl-input--search">
       <img src="./assets/img/search.png">
-      <img class="pl-feed__post--close-btn" src="./assets/img/button-close.png" click.trigger="reloadNewFeeds()">
+      <div show.bind="isSearchLoading" class="pl-loading"></div>
+      <img show.bind="!isSearchLoading" class="pl-feed__post--close-btn" src="./assets/img/button-close.png" click.trigger="reloadNewFeeds()">
     </div>
 
     <div class="pl-feed__post ${isInputOnFocus ? 'pl-feed__post--on-focus': ''}" if.bind="!isSearchButtonClick">

@@ -24,23 +24,23 @@ export class Feed {
   selectedFiles: any;
   isFileSelected: boolean;
   searchValue: "";
+  isSearchLoading: boolean;
   autolikerOptions: {};
   constructor(appService, dialogService) {
     this.autolikerOptions = { newWindow: true, truncate: 60, className: 'pl-hashtag' };
     this.appService = appService;
     this.dialogService = dialogService;
-    //this.getFeeds();
+    this.getFeeds();
 
   }
 
   getFeeds() {
     this.appService.getFeeds()
-      .then((data) => {
-        this.feeds = data;
+      .then((feeds) => {
+        this.feeds = feeds;
         _.forEach(this.feeds, (value) => {
           value = this.convertFeedToView(value);
         });
-
         return this.feeds;
       })
   }
@@ -73,27 +73,31 @@ export class Feed {
     }
 
     this.appService.createNewFeed(this.newFeed)
-      .then(data => {
+      .then((feed) => {
         this.isInputOnFocus = false;
         this.isFileSelected = false;
         this.selectedFiles = null;
-        data = this.convertFeedToView(data);
-        this.feeds.unshift(data);
+        feed = this.convertFeedToView(feed);
+        this.feeds.unshift(feed);
         this.newFeed = {};
         laddaSendFeedBtn.stop();
-      }, error => {
+      }, (error) => {
         laddaSendFeedBtn.stop();
       });
   }
 
   search() {
+    this.isSearchLoading = true;
     this.appService.search(this.searchValue)
       .then((data) => {
         this.feeds = data;
         _.forEach(this.feeds, (value) => {
           value = this.convertFeedToView(value);
         });
-      })
+        this.isSearchLoading = false;
+      }, (error) => {
+        this.isSearchLoading = false;
+      });
   }
 
   selectFeed(idx, $event) {
@@ -119,6 +123,7 @@ export class Feed {
   reloadNewFeeds() {
     this.getFeeds();
     this.isSearchButtonClick = false;
+    this.searchValue = null;
   }
 
   convertFeedToView(feed) {
