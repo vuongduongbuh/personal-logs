@@ -12,7 +12,7 @@
       <textarea value.bind="newFeed.text" placeholder="What's on your mind?" class="pl-input pl-input--blue" click.delegate="isInputOnFocus = true"> </textarea>
       <img show.bind="!isFileSelected" src="./assets/img/camera.png" click.trigger="triggerClickInputFiles()">
       <img height="25" width="15" show.bind="isFileSelected" src="./assets/img/button-close.png" click.trigger="undoSelectedFiles()">
-      <button class="pl-button" click.trigger="addNewFeed()" if.bind="isInputOnFocus">Done</button>
+      <button class="ladda-button pl-button" data-style="zoom-out" click.trigger="addNewFeed()" if.bind="isInputOnFocus">Done</button>
     </div>
 
     <div class="pl-feed__feed ${feed.isSelected ? 'selected': ''}" repeat.for="feed of feeds" mouseover.delegate="selectFeed($index, $event)">

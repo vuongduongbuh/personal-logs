@@ -7,7 +7,9 @@ import { Modal } from './modal';
 import * as moment from 'moment';
 import * as Autolinker from "autolinker";
 import * as _ from 'lodash';
-
+import "spin";
+import "ladda";
+let Ladda = require('ladda');
 @inject(AppService, DialogService)
 export class Feed {
 
@@ -28,6 +30,7 @@ export class Feed {
     this.appService = appService;
     this.dialogService = dialogService;
     //this.getFeeds();
+
   }
 
   getFeeds() {
@@ -58,6 +61,8 @@ export class Feed {
   }
 
   addNewFeed() {
+    let laddaSendFeedBtn = Ladda.create(document.querySelector('.pl-button'));
+    laddaSendFeedBtn.start();
     if (this.selectedFiles) {
       this.newFeed['file'] = this.selectedFiles[0];
       this.newFeed['tags'] += "image";
@@ -75,6 +80,9 @@ export class Feed {
         data = this.convertFeedToView(data);
         this.feeds.unshift(data);
         this.newFeed = {};
+        laddaSendFeedBtn.stop();
+      }, error => {
+        laddaSendFeedBtn.stop();
       });
   }
 
