@@ -6,6 +6,8 @@
   &__post {
     background-color: #EDF9FD;
     padding: 15px;
+    display: flex;
+    justify-content: flex-end;
 
     img {
       position: absolute;
@@ -29,9 +31,13 @@
         img {
           left: 30px;
           top: inherit;
+          display: flex;
+          align-self: flex-end;
+          height: 40px;
+          padding-bottom: 10px;
 
-          &[height='15'] {
-            height: 15px !important;
+          &[height='25'] {
+            height: 25px !important;
           }
         }
     }

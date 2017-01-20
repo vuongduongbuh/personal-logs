@@ -27,7 +27,7 @@ export class Feed {
     this.autolikerOptions = { newWindow: true, truncate: 60, className: 'pl-hashtag' };
     this.appService = appService;
     this.dialogService = dialogService;
-    this.getFeeds();
+    //this.getFeeds();
   }
 
   getFeeds() {

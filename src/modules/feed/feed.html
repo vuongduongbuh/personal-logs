@@ -11,7 +11,7 @@
     <div class="pl-feed__post ${isInputOnFocus ? 'pl-feed__post--on-focus': ''}" if.bind="!isSearchButtonClick">
       <textarea value.bind="newFeed.text" placeholder="What's on your mind?" class="pl-input pl-input--blue" click.delegate="isInputOnFocus = true"> </textarea>
       <img show.bind="!isFileSelected" src="./assets/img/camera.png" click.trigger="triggerClickInputFiles()">
-      <img height="15" width="15" show.bind="isFileSelected" src="./assets/img/button-close.png" click.trigger="undoSelectedFiles()">
+      <img height="25" width="15" show.bind="isFileSelected" src="./assets/img/button-close.png" click.trigger="undoSelectedFiles()">
       <button class="pl-button" click.trigger="addNewFeed()" if.bind="isInputOnFocus">Done</button>
     </div>
 

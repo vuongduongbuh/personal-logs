@@ -38,13 +38,14 @@
     }
 }
 .pl-button {
-    float: right;
-    clear: right;
+    display: flex;
+    align-self: flex-end;
+    position: absolute;
+    justify-content: center;
     height: 40px;
     width: 75px;
     border-radius: 10px;
     background-color: #55D2FB;
-    margin: 5px 0;
     border: none;
     color: #fff;
     outline: none;
