@@ -1,5 +1,5 @@
 {
-  "name": "AureliaDemo",
+  "name": "frontend",
   "type": "project:application",
   "platform": {
     "id": "web",
@@ -8,14 +8,15 @@
     "index": "index.html"
   },
   "transpiler": {
-    "id": "typescript",
-    "displayName": "TypeScript",
-    "fileExtension": ".ts",
-    "dtsSource": [
-      "./typings/**/*.d.ts",
-      "./custom_typings/**/*.d.ts"
-    ],
-    "source": "src/**/*.ts"
+    "id": "babel",
+    "displayName": "Babel",
+    "fileExtension": ".js",
+    "options": {
+      "plugins": [
+        "transform-es2015-modules-amd"
+      ]
+    },
+    "source": "src/**/*.js"
   },
   "markupProcessor": {
     "id": "none",
@@ -24,10 +25,10 @@
     "source": "src/**/*.html"
   },
   "cssProcessor": {
-    "id": "sass",
-    "displayName": "Sass",
-    "fileExtension": ".scss",
-    "source": "src/**/*.scss"
+    "id": "none",
+    "displayName": "None",
+    "fileExtension": ".css",
+    "source": "src/**/*.css"
   },
   "editor": {
     "id": "vscode",
@@ -36,7 +37,7 @@
   "unitTestRunner": {
     "id": "karma",
     "displayName": "Karma",
-    "source": "test/unit/**/*.ts"
+    "source": "test/unit/**/*.js"
   },
   "paths": {
     "root": "src",
@@ -145,31 +146,6 @@
             "name": "jwt-decode",
             "path": "../node_modules/jwt-decode/lib",
             "main": "index"
-          },
-          {
-            "name": "autolinker",
-            "path": "../node_modules/autolinker/dist",
-            "main": "Autolinker.min"
-          },
-          {
-            "name": "aurelia-dialog",
-            "path": "../node_modules/aurelia-dialog/dist/amd",
-            "main": "aurelia-dialog"
-          },
-          {
-            "name": "moment",
-            "path": "../node_modules/moment",
-            "main": "moment"
-          },
-          {
-            "name": "ladda",
-            "path": "../node_modules/ladda/dist",
-            "main" :"ladda.min"
-          },
-          {
-            "name": "spin",
-            "path": "../node_modules/ladda/dist",
-            "main" :"spin.min"
           }
         ]
       }
