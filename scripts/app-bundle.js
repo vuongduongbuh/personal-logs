@@ -481,7 +481,11 @@ module.exports = typeof window !== 'undefined' && window.atob && window.atob.bin
 });
 
 define('text!app.html', ['module'], function(module) { module.exports = "<template>\n  <require from=\"./styles/main.css\"></require>\n\n  <router-view></router-view>\n</template>\n"; });
-define('text!modules/feed/feed.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"pl-container\">\r\n        \r\n    </div>\r\n</template>"; });
-define('text!modules/home/home.html', ['module'], function(module) { module.exports = "<template>\r\n    AAAAAAAAAA\r\n</template>"; });
+define('text!styles/main.css', ['module'], function(module) { module.exports = ".pl-container {\n  width: 70%;\n  margin: 0 auto;\n  min-width: 1024px; }\n"; });
+define('text!modules/feed/feed.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"pl-container pl-home\">\r\n        <button class=\"btn btn--main\">Login</button>\r\n\r\n        <div class=\"pl-home__title\">\r\n            ankker - your personal log\r\n        </div>\r\n\r\n        <div class=\"pl-home__feed\">\r\n        </div>\r\n    </div>\r\n</template>"; });
+define('text!modules/feed/feed.css', ['module'], function(module) { module.exports = ""; });
+define('text!modules/home/home.css', ['module'], function(module) { module.exports = ""; });
+define('text!modules/search/search.css', ['module'], function(module) { module.exports = ""; });
+define('text!modules/home/home.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"pl-container pl-home\">\r\n        <div class=\"pl-home__login\">\r\n            <button class=\"btn btn--main\">Login</button>\r\n        </div>\r\n\r\n        <div class=\"pl-home__title\">\r\n            ankker - your personal log\r\n        </div>\r\n\r\n        <div class=\"pl-home__feed\">\r\n            Hook what matters to you\r\n\r\n            <div class=\"pl-home__feed--tag\">\r\n                masterthechaos\r\n            </div>\r\n\r\n            <div class=\"pl-home__feed--time\">\r\n                05:03AM - 01 Mar 2017\r\n            </div>\r\n        </div>\r\n\r\n        <div class=\"pl-home__buttons\">\r\n            <button class=\"btn btn--blur\">Learn More</button>\r\n\r\n            <button class=\"btn btn--main\">Sign Up</button>\r\n        </div>\r\n\r\n    </div>\r\n</template>"; });
 define('text!modules/search/search.html', ['module'], function(module) { module.exports = "<template>\r\n    CCCCCCCCCC\r\n</template>"; });
 //# sourceMappingURL=app-bundle.js.map
