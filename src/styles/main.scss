@@ -1,1 +1,8 @@
+@import "variables";
 @import "pl-container";
+
+
+//Import modules styles
+@import "../modules/feed/feed";
+@import "../modules/home/home";
+@import "../modules/search/search";

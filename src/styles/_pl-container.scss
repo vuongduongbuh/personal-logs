@@ -1,5 +1,33 @@
 .pl-container {
-    width: 70%;
+    width: 900px;
     margin: 0 auto;
-    min-width: 1024px;
+}
+
+.pl-header {
+    width: 100%;
+    padding-top: 30px;
+    display: flex;
+    justify-content: flex-end;
+
+    &--feed {
+        justify-content: space-between;
+    }
+}
+
+.pl-btn {
+    height: 35px;
+    width: 90px;
+    border-radius: 5px;
+    border: none;
+    font-size: 14px;
+    outline: none;
+
+    &--main {
+        color: #fff;
+        background-color: $font-color-blue;
+    }
+
+    &--blur {
+        color: $font-color-blue;
+    }
 }

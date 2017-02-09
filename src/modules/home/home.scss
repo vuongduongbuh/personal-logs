@@ -1,3 +1,51 @@
 .pl-home {
-    
+    width: 75%;
+    margin: 0 auto;
+    &__login {
+        width: 100%;
+        display: flex;
+    }
+
+    &__title {
+        font-size: 150%;
+        padding-top: 100px;
+        color: $font-color-blue;
+        span {
+            font-weight: bold;
+        }
+    }
+
+    &__feed {
+        padding: 15px;
+        margin-top: 20px;
+        color: $font-color-blue;
+        font-size: 14px;
+        border: 2px solid $font-color-light-blue;
+
+        &--tag {
+            margin: 5px 0;
+            span {
+                background-color: $bg-color-grey;
+                padding: 5px 15px;
+                border-radius: 5px;
+                font-size: 11px;
+            }
+        }
+
+        &--time {
+            color: $font-color-grey;
+            font-size: 14px;
+            padding-top: 10px;
+        }
+    }
+
+    &__buttons {
+        padding-top: 10px;
+        display: flex;
+        justify-content: flex-end;
+
+        button {
+            margin-left: 5px;
+        }
+    }
 }
