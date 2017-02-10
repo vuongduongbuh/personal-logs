@@ -5,13 +5,12 @@
 
     &__compose {
         width: 100%;
-        background-color: $bg-color-grey;
-        height: 70px;
+        background-color: $font-color-light-grey;
         padding: 15px;
         display: flex;
         justify-content: center;
         align-items: center;
-        div {
+        &--on-blur {
             background-color: #fff;
             color: $font-color-dark-grey;
             cursor: pointer;
@@ -21,6 +20,26 @@
             padding-left: 10px;
             border-radius: 5px;
             align-items: center;
+        }
+
+        &--on-focus {
+            width: 100%;
+            height: auto;
+            textarea {
+                resize: none;
+                border: none;
+                border-radius: 5px;
+                width: 100%;
+                outline: none;
+                padding: 5px 15px;
+            }
+
+            div {
+                display: flex;
+                justify-content: space-between;
+                padding-top: 10px;
+            }
+            
         }
     }
 
@@ -36,7 +55,7 @@
             padding: 5px 0;
             display: inline-block;
             span {
-                background-color: $bg-color-grey;
+                background-color: $font-color-light-grey;
                 padding: 5px 15px;
                 border-radius: 5px;
                 font-size: 11px;
@@ -49,6 +68,23 @@
             padding-top: 10px;
             color: $font-color-grey;
             font-size: 11px;
+        }
+
+        &--actions {
+            display: inline-block;
+            float: right;
+            padding-top: 10px;
+        }
+
+        &--on-hover {
+            background-color: $font-color-light-blue;
+
+            .pl-feed__feed--tag {
+                color: #fff;
+                span {
+                    background-color: $font-color-blue;
+                }
+            }
         }
     }
 }

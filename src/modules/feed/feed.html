@@ -10,14 +10,28 @@
 
         <div class="pl-feed">
             <div class="pl-feed__compose">
-                <div>
+                <div class="pl-feed__compose--on-blur" click.delegate="isInputOnFocus = true" show.bind="!isInputOnFocus">
                     <span>What's on your mind?</span>
+                </div>
+
+                <div class="pl-feed__compose--on-focus" show.bind="isInputOnFocus">
+                    <textarea value.bind="text" rows="3" placeholder="Start typing..." class="pl-input"> </textarea>
+
+                    <div>
+                        <div>
+                            <span>Add image </span>
+                            <span>Add link </span>
+                        </div>
+                        ${number}<button class="pl-btn pl-btn--main" click.delegate="isInputOnFocus = false">Done</button>
+                    </div>
+
                 </div>
             </div>
 
-            <div class="pl-feed__feed">
+            <div class="pl-feed__feed ${isFeedHovered ? 'pl-feed__feed--on-hover': ''}" mouseover.delegate="isFeedHovered = true" mouseout.delegate="isFeedHovered = false">
                 <div class="pl-feed__feed--content">
-                    Hook what matters to you Hook what matters to you Hook what matters to you Hook what matters to you Hook what matters to you Hook what matters to you
+                    Hook what matters to you Hook what matters to you Hook what matters to you Hook what matters to you Hook what matters to
+                    you Hook what matters to you
                 </div>
 
                 <div class="pl-feed__feed--tag">
@@ -26,8 +40,12 @@
                     <span>talented</span>
                 </div>
 
-                <div class="pl-feed__feed--time">
-                    05:03AM - 01 Mar 2017
+                <div class="pl-feed__feed--time" show.bind="!isFeedHovered">
+                    <span>05:03AM - 01 Mar 2017 </span>
+                </div>
+
+                <div class="pl-feed__feed--actions" show.bind="isFeedHovered">
+                    + ...
                 </div>
             </div>
         </div>
