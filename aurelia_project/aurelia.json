@@ -141,6 +141,21 @@
             "name": "jwt-decode",
             "path": "../node_modules/jwt-decode/lib",
             "main": "index"
+          },
+          {
+            "name": "ladda",
+            "path": "../node_modules/ladda/dist",
+            "main": "ladda.min"
+          },
+          {
+            "name": "spin",
+            "path": "../node_modules/ladda/dist",
+            "main" :"spin.min"
+          },
+          {
+            "name": "aurelia-dialog",
+            "path": "../node_modules/aurelia-dialog/dist/amd",
+            "main": "aurelia-dialog"
           }
         ]
       }

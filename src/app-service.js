@@ -38,7 +38,7 @@ export class AppService {
         }).then(data => data.json());
     }
 
-    createNewFeed(feed) {
+    postNewFeed(feed) {
         let form = new FormData()
         _.forEach(feed, (value, key) => {
             form.append(key, value);

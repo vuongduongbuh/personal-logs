@@ -10,9 +10,13 @@
   "dependencies": {
     "aurelia-animator-css": "^1.0.0",
     "aurelia-bootstrapper": "^1.0.0",
+    "aurelia-dialog": "^1.0.0-beta.3.0.1",
     "aurelia-fetch-client": "^1.1.0",
     "bluebird": "^3.4.1",
+    "bootstrap": "^3.3.7",
+    "font-awesome": "^4.7.0",
     "jwt-decode": "^2.1.0",
+    "ladda": "^1.0.0",
     "lodash": "^4.17.4",
     "requirejs": "^2.3.2",
     "text": "github:requirejs/text#latest"

@@ -2,10 +2,10 @@
     <div class="pl-container">
         <div class="pl-header pl-header--feed">
             <div>
-                <span> AA</span>
-                <button class="pl-btn pl-btn--main">Search</button>
+                <button class="pl-btn pl-btn--main pl-btn--user"><span class="glyphicon glyphicon-user"></span></button>
+                <button class="pl-btn pl-btn--main"><span class="glyphicon glyphicon-search"></span> Search</button>
             </div>
-            <button class="pl-btn pl-btn--main" click.trigger="compose()">Compose</button>
+            <button class="pl-btn pl-btn--main" click.delegate="isInputOnFocus = true">Compose</button>
         </div>
 
         <div class="pl-feed">
@@ -15,14 +15,18 @@
                 </div>
 
                 <div class="pl-feed__compose--on-focus" show.bind="isInputOnFocus">
-                    <textarea value.bind="text" rows="3" placeholder="Start typing..." class="pl-input"> </textarea>
+                    <textarea value.bind="newFeed.text" rows="3" placeholder="Start typing..." class="pl-input"> </textarea>
 
-                    <div>
+                    <div class="pl-feed__compose--actions">
                         <div>
-                            <span>Add image </span>
-                            <span>Add link </span>
+                            <a><span class="glyphicon glyphicon-camera"></span> Add image </a>
+                            <a click.trigger="showModalAddLink()"><span class="glyphicon glyphicon-link"></span> Add link </a>
                         </div>
-                        ${number}<button class="pl-btn pl-btn--main" click.delegate="isInputOnFocus = false">Done</button>
+
+                        <div>
+                            <span>${number}</span>
+                            <button class="ladda-button pl-btn pl-btn--main pl-btn--done" data-style="zoom-out" click.delegate="postNewFeed()">Done</button>
+                        </div>
                     </div>
 
                 </div>
@@ -45,7 +49,8 @@
                 </div>
 
                 <div class="pl-feed__feed--actions" show.bind="isFeedHovered">
-                    + ...
+                    <a><span class="glyphicon glyphicon-plus"></span></a>
+                    <a><span class="glyphicon glyphicon-option-horizontal"></span></a>
                 </div>
             </div>
         </div>

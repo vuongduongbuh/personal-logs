@@ -5,12 +5,18 @@ import processCSS from './process-css';
 import {build} from 'aurelia-cli';
 import project from '../aurelia.json';
 
+//import custom task
+import prepareFontAwesome from './prepare-font-awesome';
+import prepareBootstrapGlyphicon from './prepare-bootstrap-glyphicon';
+
 export default gulp.series(
   readProjectConfiguration,
   gulp.parallel(
     transpile,
     processMarkup,
-    processCSS
+    processCSS,
+    prepareFontAwesome,
+    prepareBootstrapGlyphicon
   ),
   writeBundles
 );

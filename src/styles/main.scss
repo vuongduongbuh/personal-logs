@@ -1,6 +1,10 @@
+//Import external library
+@import '../../node_modules/ladda/css/ladda';
+
+//Import variables/custom scss
 @import "variables";
 @import "pl-container";
-
+@import "pl-aurelia-dialog";
 
 //Import modules styles
 @import "../modules/feed/feed";

@@ -1,0 +1,12 @@
+<template>
+  <ai-dialog class="pl-ai-dialog">
+    <ai-dialog-body>
+      <input class="pl-input" placeholder="Add link">
+    </ai-dialog-body>
+
+    <ai-dialog-footer>
+      <button class="pl-btn pl-btn--blur" click.trigger="controller.cancel()">Cancel</button>
+      <button class="pl-btn pl-btn--main" click.trigger="controller.ok()">Add</button>
+    </ai-dialog-footer>
+  </ai-dialog>
+</template>
