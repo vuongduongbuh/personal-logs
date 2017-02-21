@@ -6,4 +6,8 @@ export class AddLinkModal {
   constructor(controller) {
     this.controller = controller;
   }
+
+  activate(addedUrl){
+    this.addedUrl = addedUrl;
+  }
 }

@@ -156,6 +156,11 @@
             "name": "aurelia-dialog",
             "path": "../node_modules/aurelia-dialog/dist/amd",
             "main": "aurelia-dialog"
+          },
+          {
+            "name": "hashtags",
+            "path": "../node_modules/hashtags",
+            "main": "index"
           }
         ]
       }

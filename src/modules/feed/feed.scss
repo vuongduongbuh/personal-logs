@@ -1,5 +1,5 @@
 .pl-feed {
-    width: 75%;
+    width: 700px;
     margin: 0 auto;
     padding-top: 30px;
 
@@ -60,11 +60,12 @@
                 }
             }
 
-            div:last-child span {
+            div:last-child h4 {
                 color: $font-color-dark-grey;
                 font-size: 13px;
                 font-weight: bold;
                 margin-right: 10px;
+                display: inline-block;
             }
         }
     }
@@ -77,6 +78,13 @@
         cursor: pointer;
         border: 2px solid $font-color-light-blue;
 
+
+        &--image {
+            width: 650px;
+            margin: 0 auto;
+            padding: 10px 0;
+        }
+
         &--tag {
             color: $font-color-blue;
             padding: 5px 0;
@@ -84,6 +92,7 @@
             span {
                 background-color: $font-color-light-grey;
                 padding: 5px 15px;
+                margin-right: 5px;
                 border-radius: 5px;
                 font-size: 11px;
             }
