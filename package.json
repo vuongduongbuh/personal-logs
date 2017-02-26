@@ -12,6 +12,7 @@
     "aurelia-bootstrapper": "^1.0.0",
     "aurelia-dialog": "^1.0.0-beta.3.0.1",
     "aurelia-fetch-client": "^1.1.0",
+    "autolinker": "^1.4.1",
     "bluebird": "^3.4.1",
     "bootstrap": "^3.3.7",
     "font-awesome": "^4.7.0",

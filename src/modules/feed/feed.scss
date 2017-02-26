@@ -70,6 +70,12 @@
         }
     }
 
+    &__connector {
+        height: 20px;
+        margin-left: 40px;
+        border-left: 3px solid $font-color-light-grey;
+    }
+
     &__feed {
         padding: 15px;
         margin-top: 20px;
@@ -104,6 +110,11 @@
             padding-top: 10px;
             color: $font-color-grey;
             font-size: 11px;
+        }
+
+        &--content {
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         &--actions {

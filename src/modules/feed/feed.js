@@ -3,13 +3,14 @@ import { BindingEngine } from 'aurelia-binding';
 import { DialogService } from 'aurelia-dialog';
 import { AppService } from '../../app-service';
 import { AppConstants } from '../../app-constant';
-import { AddLinkModal } from './link/link';
 import { ConfirmDeleteModal } from './delete/delete';
+import "autolinker";
+let Autolinker = require('autolinker');
+
 import * as _ from 'lodash';
 import "spin";
 import "ladda";
 let Ladda = require('ladda');
-
 import 'hashtags';
 let HashTags = require('hashtags');
 
@@ -20,6 +21,7 @@ export class Feed {
         this.appService = appService;
         this.dialogService = dialogService;
         this.assetsUrl = AppConstants.assetsUrl;
+        this.isOpenConnectedFeed = [];
         this.newFeed = {};
         this.number = 250;
         this.bindingEngine = bindingEngine;
@@ -34,8 +36,8 @@ export class Feed {
     getFeeds() {
         this.appService.getFeeds()
             .then((feeds) => {
-                this.feeds = feeds;
                 console.log(feeds);
+                this.feeds = feeds;
                 return this.feeds;
             });
 
@@ -55,25 +57,47 @@ export class Feed {
         if (HashTags(this.newFeed.rawText)) {
             this.newFeed.hashTags = HashTags(this.newFeed.rawText);
             _.forEach(this.newFeed.hashTags, (value, key) => {
-                this.newFeed.text = _.replace(this.newFeed.text, " " + value, "");
+                this.newFeed.text = _.replace(this.newFeed.text, value, "");
                 this.newFeed.hashTags[key] = _.replace(value, "#", "");
             });
             this.newFeed.hashTags = _.join(this.newFeed.hashTags, " ");
+        }
+
+        let autoLinkerOptions = {
+            email: false,
+            phone: false
+        };
+
+        let autoLinker = new Autolinker(autoLinkerOptions);
+
+        let urlParser = autoLinker.parse(this.newFeed.rawText);
+
+        if (urlParser.length) {
+            this.newFeed.url = urlParser[0].url;
+            this.newFeed.text = _.replace(this.newFeed.text, this.newFeed.url, "");
+            console.log(this.newFeed.url);
         }
         //Add new feed
         this.appService.postNewFeed(this.newFeed)
             .then((feed) => {
                 this.newFeed = {};
                 this.removeSelectedFile();
-                this.removeLink();
                 laddaDoneBtn.stop();
-                this.feeds.push(feed);
+                this.feeds.unshift(feed);
             }, () => {
                 laddaDoneBtn.stop();
             });
     }
 
-    showModalConfirmDelete() {
+    // showModalAddLink() {
+    //     this.dialogService.open({ viewModel: AddLinkModal, model: this.addedUrl }).then(response => {
+    //         if (!response.wasCancelled) {
+    //             this.newFeed.url = response.output;
+    //         }
+    //     });
+    // }
+
+    showModalConfirmDelete(id, idx) {
         this.dialogService.open({ viewModel: ConfirmDeleteModal }).then(response => {
             if (!response.wasCancelled) {
                 this.deleteFeed(id, idx);
@@ -81,18 +105,10 @@ export class Feed {
         });
     }
 
-    showModalAddLink() {
-        this.dialogService.open({ viewModel: AddLinkModal, model: this.addedUrl }).then(response => {
-            if (!response.wasCancelled) {
-                this.newFeed.url = response.output;
-            }
-        });
-    }
-
-    deleteFeed(id) {
-        console.log(id);
+    deleteFeed(id, idx) {
         this.appService.deleteFeed(id)
             .then((success) => {
+                this.feeds.splice(idx, 1);
                 console.log(success);
             })
     }
@@ -100,11 +116,6 @@ export class Feed {
     removeSelectedFile() {
         this.selectedFiles = null;
         this.isFileSelected = false;
-    }
-
-    removeLink() {
-        this.newFeed.url = "";
-        this.addedUrl = "";
     }
 
     triggerClickInputFiles() {

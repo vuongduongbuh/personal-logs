@@ -22,9 +22,6 @@
                         <div>
                             <a click.trigger="triggerClickInputFiles()" show.bind="!isFileSelected"><span class="glyphicon glyphicon-camera"></span> Add image </a>
                             <a click.trigger="removeSelectedFile()" show.bind="isFileSelected"><span class="glyphicon glyphicon-remove"></span> Remove image </a>
-
-                            <a click.trigger="showModalAddLink()" show.bind="!newFeed.url"><span class="glyphicon glyphicon-link"></span> Add link </a>
-                            <a click.trigger="removeLink()" show.bind="newFeed.url"><span class="glyphicon glyphicon-remove"></span> Remove link </a>
                         </div>
 
                         <div>
@@ -36,29 +33,53 @@
                 </div>
             </div>
 
-            <div class="pl-feed__feed ${isFeedHovered ? 'pl-feed__feed--on-hover': ''}" mouseover.delegate="isFeedHovered = true" mouseout.delegate="isFeedHovered = false"
-                repeat.for="feed of feeds">
-                <div class="pl-feed__feed--content">
-                    <span show.bind="!feed.url">${feed.text} </span>
+            <div repeat.for="feed of feeds">
+                <div class="pl-feed__feed ${isFeedHovered ? 'pl-feed__feed--on-hover': ''}" mouseover.delegate="isFeedHovered = true" mouseout.delegate="isFeedHovered = false">
+                    <div class="pl-feed__feed--content">
+                        <span show.bind="!feed.url">${feed.text} </span>
 
-                    <a if.bind="feed.url" href.bind="feed.url" target="_blank"> ${feed.text} </a>
+                        <a if.bind="feed.url" href.bind="feed.url" target="_blank"> ${feed.text} </a>
+                    </div>
+
+                    <div class="pl-feed__feed--image" if.bind="feed.media">
+                        <img class="pl-feed__feed--img" width="650" src="${assetsUrl + feed.media}">
+                    </div>
+
+                    <div class="pl-feed__feed--tag">
+                        <span repeat.for="tag of feed.hashTags">${tag}</span>
+                    </div>
+
+                    <div class="pl-feed__feed--time" show.bind="!isFeedHovered">
+                        <span>05:03AM - 01 Mar 2017 </span>
+                    </div>
+
+                    <div class="pl-feed__feed--actions" show.bind="isFeedHovered">
+                        <a click.trigger="feed.isConnectionOpened = true"><span class="glyphicon glyphicon-plus"></span></a>
+                        <a click.trigger="showModalConfirmDelete(feed.id, $index)"><span class="glyphicon glyphicon-option-horizontal"></span></a>
+                    </div>
                 </div>
 
-                <div class="pl-feed__feed--image" if.bind="feed.media">
-                    <img class="pl-feed__feed--img" width="650" src="${assetsUrl + feed.media}">
+                <div class="pl-feed__connector" show.bind="feed.isConnectionOpened">
+
                 </div>
 
-                <div class="pl-feed__feed--tag">
-                    <span repeat.for="tag of feed.hashTags">${tag}</span>
-                </div>
+                <div class="pl-feed__compose" show.bind="feed.isConnectionOpened">
+                    <div class="pl-feed__compose--on-focus">
+                        <textarea value.bind="newFeed.rawText" rows="3" placeholder="Start typing..." class="pl-input"> </textarea>
 
-                <div class="pl-feed__feed--time" show.bind="!isFeedHovered">
-                    <span>05:03AM - 01 Mar 2017 </span>
-                </div>
+                        <div class="pl-feed__compose--actions">
+                            <div>
+                                <a click.trigger="triggerClickInputFiles()" show.bind="!isFileSelected"><span class="glyphicon glyphicon-camera"></span> Add image </a>
+                                <a click.trigger="removeSelectedFile()" show.bind="isFileSelected"><span class="glyphicon glyphicon-remove"></span> Remove image </a>
+                            </div>
 
-                <div class="pl-feed__feed--actions" show.bind="isFeedHovered">
-                    <a><span class="glyphicon glyphicon-plus"></span></a>
-                    <a click.trigger="deleteFeed(feed.id)"><span class="glyphicon glyphicon-option-horizontal"></span></a>
+                            <div>
+                                <h4>${number}</h4>
+                                <button class="ladda-button pl-btn pl-btn--main pl-btn--done" data-style="zoom-out" click.delegate="postNewFeed()">Done</button>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>

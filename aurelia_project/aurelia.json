@@ -150,7 +150,7 @@
           {
             "name": "spin",
             "path": "../node_modules/ladda/dist",
-            "main" :"spin.min"
+            "main": "spin.min"
           },
           {
             "name": "aurelia-dialog",
@@ -161,6 +161,11 @@
             "name": "hashtags",
             "path": "../node_modules/hashtags",
             "main": "index"
+          },
+          {
+            "name": "autolinker",
+            "path": "../node_modules/autolinker/dist",
+            "main": "Autolinker.min"
           }
         ]
       }
