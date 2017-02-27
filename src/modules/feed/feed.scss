@@ -10,6 +10,11 @@
         display: flex;
         justify-content: center;
         align-items: center;
+
+        &--connector {
+            margin-top: 20px;
+        }
+
         &--on-blur {
             background-color: #fff;
             color: $font-color-dark-grey;
@@ -74,6 +79,11 @@
         height: 20px;
         margin-left: 40px;
         border-left: 3px solid $font-color-light-grey;
+        position: absolute;
+
+        &--front {
+            margin-top: -20px;
+        }
     }
 
     &__feed {

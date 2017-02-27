@@ -1,5 +1,5 @@
 <template>
-    <input type="file" files.bind="selectedFiles" change.delegate="isFileSelected=true" class="pl-input--files">
+    <input type="file" files.bind="newFeed.selectedFiles" change.delegate="isFileSelected=true" class="pl-input--files">
     <div class="pl-container">
         <div class="pl-header pl-header--feed">
             <div>
@@ -25,7 +25,7 @@
                         </div>
 
                         <div>
-                            <h4>${number}</h4>
+                            <h4>${newFeedLength}</h4>
                             <button class="ladda-button pl-btn pl-btn--main pl-btn--done" data-style="zoom-out" click.delegate="postNewFeed()">Done</button>
                         </div>
                     </div>
@@ -34,6 +34,9 @@
             </div>
 
             <div repeat.for="feed of feeds">
+                <div class="pl-feed__connector pl-feed__connector--front" show.bind="feed.connectTo">
+                </div>
+
                 <div class="pl-feed__feed ${isFeedHovered ? 'pl-feed__feed--on-hover': ''}" mouseover.delegate="isFeedHovered = true" mouseout.delegate="isFeedHovered = false">
                     <div class="pl-feed__feed--content">
                         <span show.bind="!feed.url">${feed.text} </span>
@@ -54,18 +57,17 @@
                     </div>
 
                     <div class="pl-feed__feed--actions" show.bind="isFeedHovered">
-                        <a click.trigger="feed.isConnectionOpened = true"><span class="glyphicon glyphicon-plus"></span></a>
+                        <a click.trigger="openConnectionToAFeed(feed)" show.bind="!feed.connectTo && !feed.hasConnection"><span class="glyphicon glyphicon-plus"></span></a>
                         <a click.trigger="showModalConfirmDelete(feed.id, $index)"><span class="glyphicon glyphicon-option-horizontal"></span></a>
                     </div>
                 </div>
 
                 <div class="pl-feed__connector" show.bind="feed.isConnectionOpened">
-
                 </div>
 
-                <div class="pl-feed__compose" show.bind="feed.isConnectionOpened">
+                <div class="pl-feed__compose pl-feed__compose--connector" show.bind="feed.isConnectionOpened">
                     <div class="pl-feed__compose--on-focus">
-                        <textarea value.bind="newFeed.rawText" rows="3" placeholder="Start typing..." class="pl-input"> </textarea>
+                        <textarea value.bind="newConnector.rawText" rows="3" placeholder="Start typing..." class="pl-input"> </textarea>
 
                         <div class="pl-feed__compose--actions">
                             <div>
@@ -74,8 +76,8 @@
                             </div>
 
                             <div>
-                                <h4>${number}</h4>
-                                <button class="ladda-button pl-btn pl-btn--main pl-btn--done" data-style="zoom-out" click.delegate="postNewFeed()">Done</button>
+                                <h4>${newConnectorLength}</h4>
+                                <button class="ladda-button pl-btn pl-btn--main pl-btn--done" data-style="zoom-out" click.delegate="postNewConnector(feed, $index)">Done</button>
                             </div>
                         </div>
 
