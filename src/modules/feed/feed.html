@@ -1,4 +1,12 @@
 <template>
+    <div class="row"> 
+        <div class="col-md-6"> 
+            AAAA
+        </div>
+        <div class="col-md-6"> 
+            <a data-toggle="popover" ref="myForm" title="Popover Header" data-content="Some content inside the popover">Toggle popover</a>
+        </div>
+    </div>
     <input type="file" files.bind="newFeed.selectedFiles" change.delegate="newFeed.isFileSelected=true" class="pl-input--files pl-input--files--new">
     <input type="file" files.bind="newConnector.selectedFiles" change.delegate="newConnector.isFileSelected=true" class="pl-input--files pl-input--files--connect">
     <input type="file" files.bind="editedFeed.selectedFiles" change.delegate="editedFeed.isFileSelected=true" class="pl-input--files pl-input--files--edit">

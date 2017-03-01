@@ -166,6 +166,21 @@
             "name": "autolinker",
             "path": "../node_modules/autolinker/dist",
             "main": "Autolinker.min"
+          },
+          {
+            "name": "jquery",
+            "path": "../node_modules/jquery/dist",
+            "main": "jquery.min"
+          },
+          {
+            "name": "popover",
+            "path": "../node_modules/bootstrap/js",
+            "main": "popover"
+          },
+          {
+            "name": "tooltip",
+            "path": "../node_modules/bootstrap/js",
+            "main": "tooltip"
           }
         ]
       }

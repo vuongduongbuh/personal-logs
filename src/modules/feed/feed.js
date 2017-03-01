@@ -5,8 +5,9 @@ import { AppService } from '../../app-service';
 import { AppConstants } from '../../app-constant';
 import { ConfirmDeleteModal } from './delete/delete';
 import "autolinker";
+import * as tooltip from "tooltip";
+import * as popover from "popover";
 let Autolinker = require('autolinker');
-
 import * as _ from 'lodash';
 import "spin";
 import "ladda";
@@ -40,6 +41,9 @@ export class Feed {
             });
 
         this.getFeeds();
+
+        
+         //$('[data-toggle="popover"]').popover(); 
     }
 
     getFeeds() {
@@ -53,6 +57,10 @@ export class Feed {
     }
 
     postNewFeed() {
+        var jq = jQuery.noConflict();
+
+        console.log(jq('[data-toggle="popover"]'));
+        jq('[data-toggle="popover"]').popover(); 
         let laddaDoneBtn = Ladda.create(document.querySelector('.pl-btn--done'));
         laddaDoneBtn.start();
 
