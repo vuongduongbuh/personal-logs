@@ -1,12 +1,5 @@
 <template>
-    <div class="row"> 
-        <div class="col-md-6"> 
-            AAAA
-        </div>
-        <div class="col-md-6"> 
-            <a data-toggle="popover" ref="myForm" title="Popover Header" data-content="Some content inside the popover">Toggle popover</a>
-        </div>
-    </div>
+    <require from="./popover"></require>
     <input type="file" files.bind="newFeed.selectedFiles" change.delegate="newFeed.isFileSelected=true" class="pl-input--files pl-input--files--new">
     <input type="file" files.bind="newConnector.selectedFiles" change.delegate="newConnector.isFileSelected=true" class="pl-input--files pl-input--files--connect">
     <input type="file" files.bind="editedFeed.selectedFiles" change.delegate="editedFeed.isFileSelected=true" class="pl-input--files pl-input--files--edit">
@@ -68,7 +61,7 @@
 
                     <div class="pl-feed__feed--actions" show.bind="isFeedHovered">
                         <a click.trigger="openConnectionToAFeed(feed)" show.bind="!feed.connectTo && !feed.hasConnection"><span class="glyphicon glyphicon-plus"></span></a>
-                        <a click.trigger="editFeed(feed, $index)"><span class="glyphicon glyphicon-option-horizontal"></span></a>
+                        <a  data-popover-content="#pl-popover" pl-popover><span class="glyphicon glyphicon-option-horizontal"></span></a>
                     </div>
                 </div>
                 

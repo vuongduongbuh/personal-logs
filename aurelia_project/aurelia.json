@@ -173,14 +173,9 @@
             "main": "jquery.min"
           },
           {
-            "name": "popover",
-            "path": "../node_modules/bootstrap/js",
-            "main": "popover"
-          },
-          {
-            "name": "tooltip",
-            "path": "../node_modules/bootstrap/js",
-            "main": "tooltip"
+            "name": "bootstrap",
+            "path": "../node_modules/bootstrap/dist/js",
+            "main": "bootstrap"
           }
         ]
       }
