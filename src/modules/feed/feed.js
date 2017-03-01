@@ -25,6 +25,7 @@ export class Feed {
         this.newFeed = {};
         this.newConnector = {};
         this.newFeedLength = 250;
+        this.editedFeed = {};
         this.newConnectorLength = 250;
         this.bindingEngine = bindingEngine;
         // subscribe
@@ -46,7 +47,6 @@ export class Feed {
             .then((feeds) => {
                 this.feeds = feeds;
                 this.feeds = this.reArrangeFeedsWithConnections();
-                console.log(this.feeds);
                 //this.deleteAllFeeds();
                 return this.feeds;
             });
@@ -61,9 +61,11 @@ export class Feed {
         this.appService.postNewFeed(this.newFeed)
             .then((feed) => {
                 this.newFeed = {};
-                this.removeSelectedFile();
+                this.removeSelectedFile(this.newFeed);
+                this.isInputOnFocus = false;
                 laddaDoneBtn.stop();
                 this.feeds.unshift(feed);
+                this.feeds = this.reArrangeFeedsWithConnections();
             }, () => {
                 laddaDoneBtn.stop();
             });
@@ -79,8 +81,32 @@ export class Feed {
                 this.feeds[idx].hasConnection = true;
                 this.newConnector = {};
                 this.feeds.splice(idx + 1, 0, connectedFeed);
+                this.feeds = this.reArrangeFeedsWithConnections();
             }, () => {
             });
+    }
+
+    editFeed(feed, idx) {
+        this.isInputOnFocus = false;
+        _.forEach(this.feeds, (value, key) => {
+            value.isEdited = false;
+        });
+        this.editedFeed = _.clone(feed);
+        feed.isEdited = true;
+    }
+
+    saveFeed(feed, idx) {
+        this.editedFeed = this.convertRawFeedToFeed(this.editedFeed);
+        //Add new feed
+        this.appService.editFeed(this.editedFeed)
+            .then((editedFeed) => {
+                this.feeds[idx] = editedFeed;
+                this.feeds = this.reArrangeFeedsWithConnections();
+                feed.isEdited = false;
+
+            }, () => {
+            });
+        
     }
 
     showModalConfirmDelete(id, idx) {
@@ -95,23 +121,21 @@ export class Feed {
         this.appService.deleteFeed(id)
             .then((success) => {
                 this.feeds.splice(idx, 1);
-                console.log(success);
             });
     }
 
-    removeSelectedFile() {
-        this.newFeed.selectedFiles = null;
-        this.isFileSelected = false;
+    removeSelectedFile(feed) {
+        feed.selectedFiles = null;
+        feed.isFileSelected = false;
     }
 
-    triggerClickInputFiles() {
-        let input = document.querySelector(".pl-input--files");
+    triggerClickInputFiles(flag) {
+        let input = document.querySelector(".pl-input--files--" + flag);
         input.click();
     }
 
     convertRawFeedToFeed(rawFeed) {
         let feed = rawFeed;
-
         //Check if file is selected
         if (feed.selectedFiles) {
             feed.file = feed.selectedFiles[0];
@@ -174,12 +198,12 @@ export class Feed {
         return resultFeeds;
     }
 
-    deleteAllFeeds() {
-        _.forEach(this.feeds, (value, key) => {
-            this.appService.deleteFeed(value.id)
-                .then((success) => {
-                    console.log(success);
-                })
-        })
-    }
+    // deleteAllFeeds() {
+    //     _.forEach(this.feeds, (value, key) => {
+    //         this.appService.deleteFeed(value.id)
+    //             .then((success) => {
+    //                 console.log(success);
+    //             })
+    //     })
+    // }
 }

@@ -1,5 +1,7 @@
 <template>
-    <input type="file" files.bind="newFeed.selectedFiles" change.delegate="isFileSelected=true" class="pl-input--files">
+    <input type="file" files.bind="newFeed.selectedFiles" change.delegate="newFeed.isFileSelected=true" class="pl-input--files pl-input--files--new">
+    <input type="file" files.bind="newConnector.selectedFiles" change.delegate="newConnector.isFileSelected=true" class="pl-input--files pl-input--files--connect">
+    <input type="file" files.bind="editedFeed.selectedFiles" change.delegate="editedFeed.isFileSelected=true" class="pl-input--files pl-input--files--edit">
     <div class="pl-container">
         <div class="pl-header pl-header--feed">
             <div>
@@ -20,8 +22,8 @@
 
                     <div class="pl-feed__compose--actions">
                         <div>
-                            <a click.trigger="triggerClickInputFiles()" show.bind="!isFileSelected"><span class="glyphicon glyphicon-camera"></span> Add image </a>
-                            <a click.trigger="removeSelectedFile()" show.bind="isFileSelected"><span class="glyphicon glyphicon-remove"></span> Remove image </a>
+                            <a click.trigger="triggerClickInputFiles('new')" show.bind="!newFeed.isFileSelected"><span class="glyphicon glyphicon-camera"></span> Add image </a>
+                            <a click.trigger="removeSelectedFile()" show.bind="newFeed.isFileSelected"><span class="glyphicon glyphicon-remove"></span> Remove image </a>
                         </div>
 
                         <div>
@@ -37,11 +39,11 @@
                 <div class="pl-feed__connector pl-feed__connector--front" show.bind="feed.connectTo">
                 </div>
 
-                <div class="pl-feed__feed ${isFeedHovered ? 'pl-feed__feed--on-hover': ''}" mouseover.delegate="isFeedHovered = true" mouseout.delegate="isFeedHovered = false">
+                <div class="pl-feed__feed ${isFeedHovered ? 'pl-feed__feed--on-hover': ''}" mouseover.delegate="isFeedHovered = true" mouseout.delegate="isFeedHovered = false" show.bind="!feed.isEdited">
                     <div class="pl-feed__feed--content">
                         <span show.bind="!feed.url">${feed.text} </span>
 
-                        <a if.bind="feed.url" href.bind="feed.url" target="_blank"> ${feed.text} </a>
+                        <a if.bind="feed.url" href.bind="feed.url" target="_blank">${feed.text} </a>
                     </div>
 
                     <div class="pl-feed__feed--image" if.bind="feed.media">
@@ -58,7 +60,26 @@
 
                     <div class="pl-feed__feed--actions" show.bind="isFeedHovered">
                         <a click.trigger="openConnectionToAFeed(feed)" show.bind="!feed.connectTo && !feed.hasConnection"><span class="glyphicon glyphicon-plus"></span></a>
-                        <a click.trigger="showModalConfirmDelete(feed.id, $index)"><span class="glyphicon glyphicon-option-horizontal"></span></a>
+                        <a click.trigger="editFeed(feed, $index)"><span class="glyphicon glyphicon-option-horizontal"></span></a>
+                    </div>
+                </div>
+                
+                <div class="pl-feed__compose pl-feed__compose--connector" show.bind="feed.isEdited">
+                    <div class="pl-feed__compose--on-focus">
+                        <textarea value.bind="editedFeed.rawText" rows="3" placeholder="Start typing..." class="pl-input"> </textarea>
+
+                        <div class="pl-feed__compose--actions">
+                            <div>
+                                <a click.trigger="triggerClickInputFiles('edit')" show.bind="!editedFeed.isFileSelected"><span class="glyphicon glyphicon-camera"></span> Add image </a>
+                                <a click.trigger="removeSelectedFile()" show.bind="editedFeed.isFileSelected"><span class="glyphicon glyphicon-remove"></span> Remove image </a>
+                            </div>
+
+                            <div>
+                                <h4>${newConnectorLength}</h4>
+                                <button class="ladda-button pl-btn pl-btn--main pl-btn--done" data-style="zoom-out" click.delegate="saveFeed(feed, $index)">Done</button>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
@@ -71,8 +92,8 @@
 
                         <div class="pl-feed__compose--actions">
                             <div>
-                                <a click.trigger="triggerClickInputFiles()" show.bind="!isFileSelected"><span class="glyphicon glyphicon-camera"></span> Add image </a>
-                                <a click.trigger="removeSelectedFile()" show.bind="isFileSelected"><span class="glyphicon glyphicon-remove"></span> Remove image </a>
+                                <a click.trigger="triggerClickInputFiles('connect')" show.bind="!newConnector.isFileSelected"><span class="glyphicon glyphicon-camera"></span> Add image </a>
+                                <a click.trigger="removeSelectedFile()" show.bind="newConnector.isFileSelected"><span class="glyphicon glyphicon-remove"></span> Remove image </a>
                             </div>
 
                             <div>

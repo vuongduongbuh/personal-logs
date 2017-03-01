@@ -50,6 +50,18 @@ export class AppService {
         }).then(data => data.json());
     }
 
+    editFeed(feed) {
+        let form = new FormData()
+        _.forEach(feed, (value, key) => {
+            form.append(key, value);
+        });
+
+        return this.httpClient.fetch("feeds/" + feed.id, {
+            method: 'put',
+            body: form
+        }).then(data => data.json());
+    }
+
     deleteFeed(id) {
         return this.httpClient.fetch("feeds/" + id, {
             method: "delete"
