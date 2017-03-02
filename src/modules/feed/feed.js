@@ -2,6 +2,7 @@ import { inject } from 'aurelia-dependency-injection';
 import { BindingEngine } from 'aurelia-binding';
 import { DialogService } from 'aurelia-dialog';
 import { AppService } from '../../app-service';
+import { AlertService } from '../../services/alertService/alert-service';
 import { AppConstants } from '../../app-constant';
 import { ConfirmDeleteModal } from './delete/delete';
 import "autolinker";
@@ -13,12 +14,15 @@ let Ladda = require('ladda');
 import 'hashtags';
 let HashTags = require('hashtags');
 
-@inject(BindingEngine, AppService, DialogService)
+import tooltipster from "tooltipster";
+
+@inject(BindingEngine, AppService, DialogService, AlertService)
 export class Feed {
 
-    constructor(bindingEngine, appService, dialogService) {
+    constructor(bindingEngine, appService, dialogService, alertService) {
         this.appService = appService;
         this.dialogService = dialogService;
+        this.alertService = alertService;
         this.assetsUrl = AppConstants.assetsUrl;
         this.isOpenConnectedFeed = [];
         this.newFeed = {};
@@ -39,6 +43,14 @@ export class Feed {
             });
 
         this.getFeeds();
+
+        setTimeout(() => {
+            console.log($('.btn-tooltip'));
+            let ele = $('.btn-tooltip').tooltipster({
+                theme: 'tooltipster-noir'
+            });
+            console.log(ele);
+        }, 1000)
     }
 
     getFeeds() {
@@ -65,6 +77,7 @@ export class Feed {
                 laddaDoneBtn.stop();
                 this.feeds.unshift(feed);
                 this.feeds = this.reArrangeFeedsWithConnections();
+                this.alertService.success("Post new feed successfully!");
             }, () => {
                 laddaDoneBtn.stop();
             });
@@ -81,6 +94,7 @@ export class Feed {
                 this.newConnector = {};
                 this.feeds.splice(idx + 1, 0, connectedFeed);
                 this.feeds = this.reArrangeFeedsWithConnections();
+                this.alertService.success("Add new connector successfully!");
             }, () => {
             });
     }
@@ -102,7 +116,7 @@ export class Feed {
                 this.feeds[idx] = editedFeed;
                 this.feeds = this.reArrangeFeedsWithConnections();
                 feed.isEdited = false;
-
+                this.alertService.success("Edit feed successfully!");
             }, () => {
             });
         
@@ -120,6 +134,7 @@ export class Feed {
         this.appService.deleteFeed(id)
             .then((success) => {
                 this.feeds.splice(idx, 1);
+                this.alertService.success("Delete feed successfully!");
             });
     }
 
@@ -196,13 +211,4 @@ export class Feed {
 
         return resultFeeds;
     }
-
-    // deleteAllFeeds() {
-    //     _.forEach(this.feeds, (value, key) => {
-    //         this.appService.deleteFeed(value.id)
-    //             .then((success) => {
-    //                 console.log(success);
-    //             })
-    //     })
-    // }
 }

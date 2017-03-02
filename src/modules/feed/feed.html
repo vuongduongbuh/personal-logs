@@ -1,18 +1,23 @@
 <template>
-    <require from="./popover"></require>
     <input type="file" files.bind="newFeed.selectedFiles" change.delegate="newFeed.isFileSelected=true" class="pl-input--files pl-input--files--new">
     <input type="file" files.bind="newConnector.selectedFiles" change.delegate="newConnector.isFileSelected=true" class="pl-input--files pl-input--files--connect">
     <input type="file" files.bind="editedFeed.selectedFiles" change.delegate="editedFeed.isFileSelected=true" class="pl-input--files pl-input--files--edit">
+
+    
     <div class="pl-container">
         <div class="pl-header pl-header--feed">
             <div>
-                <button class="pl-btn pl-btn--main pl-btn--user"><span class="glyphicon glyphicon-user"></span></button>
-                <button class="pl-btn pl-btn--main"><span class="glyphicon glyphicon-search"></span> Search</button>
+                <!--<button class="pl-btn pl-btn--main pl-btn--user"><span class="glyphicon glyphicon-user"></span></button>-->
+                <!--<button class="pl-btn pl-btn--main"><span class="glyphicon glyphicon-search"></span> Search</button>-->
+                <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-user"></span></button>
+                <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span> Search</button>
             </div>
-            <button class="pl-btn pl-btn--main" click.delegate="isInputOnFocus = true">Compose</button>
+            <button type="button" class="btn btn-primary" click.delegate="isInputOnFocus = true">Compose</button>
+            <!--<button class="pl-btn pl-btn--main" click.delegate="isInputOnFocus = true">Compose</button>-->
         </div>
 
         <div class="pl-feed">
+            <button class="button btn-tooltip" title="This is my image's tooltip message!">Tooltipster</button>
             <div class="pl-feed__compose">
                 <div class="pl-feed__compose--on-blur" click.delegate="isInputOnFocus = true" show.bind="!isInputOnFocus">
                     <span>What's on your mind?</span>
@@ -29,7 +34,8 @@
 
                         <div>
                             <h4>${newFeedLength}</h4>
-                            <button class="ladda-button pl-btn pl-btn--main pl-btn--done" data-style="zoom-out" click.delegate="postNewFeed()">Done</button>
+                            <!--<button class="ladda-button pl-btn pl-btn--main pl-btn--done" data-style="zoom-out" click.delegate="postNewFeed()">Done</button>-->
+                            <button type="button" class="btn btn-primary ladda-button pl-btn--done" data-style="zoom-out"  click.delegate="postNewFeed()">Done</button>
                         </div>
                     </div>
 
@@ -40,7 +46,8 @@
                 <div class="pl-feed__connector pl-feed__connector--front" show.bind="feed.connectTo">
                 </div>
 
-                <div class="pl-feed__feed ${isFeedHovered ? 'pl-feed__feed--on-hover': ''}" mouseover.delegate="isFeedHovered = true" mouseout.delegate="isFeedHovered = false" show.bind="!feed.isEdited">
+                <div class="pl-feed__feed ${isFeedHovered ? 'pl-feed__feed--on-hover': ''}" mouseover.delegate="isFeedHovered = true" mouseout.delegate="isFeedHovered = false"
+                    show.bind="!feed.isEdited">
                     <div class="pl-feed__feed--content">
                         <span show.bind="!feed.url">${feed.text} </span>
 
@@ -61,51 +68,54 @@
 
                     <div class="pl-feed__feed--actions" show.bind="isFeedHovered">
                         <a click.trigger="openConnectionToAFeed(feed)" show.bind="!feed.connectTo && !feed.hasConnection"><span class="glyphicon glyphicon-plus"></span></a>
-                        <a  data-popover-content="#pl-popover" pl-popover><span class="glyphicon glyphicon-option-horizontal"></span></a>
+                        <a click.trigger="deleteFeed(feed.id, $index)"><span class="glyphicon glyphicon-option-horizontal"></span></a>
+                        <a click.trigger="editFeed(feed, $index)"><span class="glyphicon glyphicon-option-horizontal"></span></a>
                     </div>
-                </div>
-                
-                <div class="pl-feed__compose pl-feed__compose--connector" show.bind="feed.isEdited">
-                    <div class="pl-feed__compose--on-focus">
-                        <textarea value.bind="editedFeed.rawText" rows="3" placeholder="Start typing..." class="pl-input"> </textarea>
+            </div>
 
-                        <div class="pl-feed__compose--actions">
-                            <div>
-                                <a click.trigger="triggerClickInputFiles('edit')" show.bind="!editedFeed.isFileSelected"><span class="glyphicon glyphicon-camera"></span> Add image </a>
-                                <a click.trigger="removeSelectedFile()" show.bind="editedFeed.isFileSelected"><span class="glyphicon glyphicon-remove"></span> Remove image </a>
-                            </div>
+            <div class="pl-feed__compose pl-feed__compose--connector" show.bind="feed.isEdited">
+                <div class="pl-feed__compose--on-focus">
+                    <textarea value.bind="editedFeed.rawText" rows="3" placeholder="Start typing..." class="pl-input"> </textarea>
 
-                            <div>
-                                <h4>${newConnectorLength}</h4>
-                                <button class="ladda-button pl-btn pl-btn--main pl-btn--done" data-style="zoom-out" click.delegate="saveFeed(feed, $index)">Done</button>
-                            </div>
+                    <div class="pl-feed__compose--actions">
+                        <div>
+                            <a click.trigger="triggerClickInputFiles('edit')" show.bind="!editedFeed.isFileSelected"><span class="glyphicon glyphicon-camera"></span> Add image </a>
+                            <a click.trigger="removeSelectedFile()" show.bind="editedFeed.isFileSelected"><span class="glyphicon glyphicon-remove"></span> Remove image </a>
                         </div>
 
+                        <div>
+                            <h4>${newConnectorLength}</h4>
+                            <!--<button class="ladda-button pl-btn pl-btn--main pl-btn--done" data-style="zoom-out" click.delegate="saveFeed(feed, $index)">Done</button>-->
+                            <button type="button" class="btn btn-primary ladda-button pl-btn--done" data-style="zoom-out"  click.delegate="saveFeed(feed, $index)">Done</button>
+                        </div>
                     </div>
+
                 </div>
+            </div>
 
-                <div class="pl-feed__connector" show.bind="feed.isConnectionOpened">
-                </div>
+            <div class="pl-feed__connector" show.bind="feed.isConnectionOpened">
+            </div>
 
-                <div class="pl-feed__compose pl-feed__compose--connector" show.bind="feed.isConnectionOpened">
-                    <div class="pl-feed__compose--on-focus">
-                        <textarea value.bind="newConnector.rawText" rows="3" placeholder="Start typing..." class="pl-input"> </textarea>
+            <div class="pl-feed__compose pl-feed__compose--connector" show.bind="feed.isConnectionOpened">
+                <div class="pl-feed__compose--on-focus">
+                    <textarea value.bind="newConnector.rawText" rows="3" placeholder="Start typing..." class="pl-input"> </textarea>
 
-                        <div class="pl-feed__compose--actions">
-                            <div>
-                                <a click.trigger="triggerClickInputFiles('connect')" show.bind="!newConnector.isFileSelected"><span class="glyphicon glyphicon-camera"></span> Add image </a>
-                                <a click.trigger="removeSelectedFile()" show.bind="newConnector.isFileSelected"><span class="glyphicon glyphicon-remove"></span> Remove image </a>
-                            </div>
-
-                            <div>
-                                <h4>${newConnectorLength}</h4>
-                                <button class="ladda-button pl-btn pl-btn--main pl-btn--done" data-style="zoom-out" click.delegate="postNewConnector(feed, $index)">Done</button>
-                            </div>
+                    <div class="pl-feed__compose--actions">
+                        <div>
+                            <a click.trigger="triggerClickInputFiles('connect')" show.bind="!newConnector.isFileSelected"><span class="glyphicon glyphicon-camera"></span> Add image </a>
+                            <a click.trigger="removeSelectedFile()" show.bind="newConnector.isFileSelected"><span class="glyphicon glyphicon-remove"></span> Remove image </a>
                         </div>
 
+                        <div>
+                            <h4>${newConnectorLength}</h4>
+                            <!--<button class="ladda-button pl-btn pl-btn--main pl-btn--done" data-style="zoom-out" click.delegate="postNewConnector(feed, $index)">Done</button>-->
+                            <button type="button" class="btn btn-primary ladda-button pl-btn--done" data-style="zoom-out"  click.delegate="postNewConnector(feed, $index)">Done</button>
+                        </div>
                     </div>
+
                 </div>
             </div>
         </div>
+    </div>
     </div>
 </template>

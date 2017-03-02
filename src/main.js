@@ -18,7 +18,10 @@ export function configure(aurelia) {
       config.settings.centerHorizontalOnly = false;
       config.settings.startingZIndex = 5;
       config.settings.enableEscClose = true;
-    }).plugin('aurelia-bootstrapper');
+    }).plugin('aurelia-bootstrapper')
+      .globalResources([
+        "modules/feed/popover"
+      ]);
 
   if (environment.debug) {
     aurelia.use.developmentLogging();

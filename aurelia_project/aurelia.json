@@ -176,6 +176,21 @@
             "name": "bootstrap",
             "path": "../node_modules/bootstrap/dist/js",
             "main": "bootstrap"
+          },
+          {
+            "name": "es6-promise",
+            "path": "../node_modules/es6-promise/dist",
+            "main": "es6-promise.min"
+          },
+          {
+            "name": "sweetalert2",
+            "path": "../node_modules/sweetalert2/dist",
+            "main": "sweetalert2.min"
+          },
+          {
+            "name": "tooltipster",
+            "path": "../node_modules/tooltipster/dist/js",
+            "main": "tooltipster.bundle.min"
           }
         ]
       }

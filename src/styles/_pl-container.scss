@@ -39,19 +39,19 @@ body {
     font-size: 13px;
     outline: none;
 
-    &--main {
-        color: #fff;
-        background-color: $font-color-blue;
+    // &--main {
+    //     color: #fff;
+    //     background-color: $font-color-blue;
 
-        span {
-            padding: 0 5px;
-        }
+    //     span {
+    //         padding: 0 5px;
+    //     }
 
-        &:hover {
-            color: #fff !important;
-            background-color: $font-color-blue !important;
-        }
-    }
+    //     &:hover {
+    //         color: #fff !important;
+    //         background-color: $font-color-blue !important;
+    //     }
+    // }
 
     &--blur {
         color: $font-color-blue;
