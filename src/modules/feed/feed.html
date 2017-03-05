@@ -17,7 +17,6 @@
         </div>
 
         <div class="pl-feed">
-            <button class="button btn-tooltip" title="This is my image's tooltip message!">Tooltipster</button>
             <div class="pl-feed__compose">
                 <div class="pl-feed__compose--on-blur" click.delegate="isInputOnFocus = true" show.bind="!isInputOnFocus">
                     <span>What's on your mind?</span>
@@ -68,8 +67,10 @@
 
                     <div class="pl-feed__feed--actions" show.bind="isFeedHovered">
                         <a click.trigger="openConnectionToAFeed(feed)" show.bind="!feed.connectTo && !feed.hasConnection"><span class="glyphicon glyphicon-plus"></span></a>
-                        <a click.trigger="deleteFeed(feed.id, $index)"><span class="glyphicon glyphicon-option-horizontal"></span></a>
-                        <a click.trigger="editFeed(feed, $index)"><span class="glyphicon glyphicon-option-horizontal"></span></a>
+                        <!--<a click.trigger="deleteFeed(feed.id, $index)"><span class="glyphicon glyphicon-option-horizontal"></span></a>
+                        <a click.trigger="editFeed(feed, $index)"><span class="glyphicon glyphicon-option-horizontal"></span></a>-->
+
+                        <a class="btn-tooltip" title="This is my image's tooltip message!"><span class="glyphicon glyphicon-option-horizontal"></span></a>
                     </div>
             </div>
 

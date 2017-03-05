@@ -47,7 +47,8 @@ export class Feed {
         setTimeout(() => {
             console.log($('.btn-tooltip'));
             let ele = $('.btn-tooltip').tooltipster({
-                theme: 'tooltipster-noir'
+                theme: 'tooltipster-noir',
+                trigger: 'click'
             });
             console.log(ele);
         }, 1000)
