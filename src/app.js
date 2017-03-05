@@ -1,13 +1,18 @@
 import { inject } from 'aurelia-framework';
 import { Router, Redirect } from 'aurelia-router';
+import { I18N } from 'aurelia-i18n';
 import { AppConstants } from './app-constant';
 import { AuthService } from './services/authService/auth-service';
 
-@inject(AuthService)
+@inject(AuthService, I18N)
 export class App {
-  constructor(AuthService) {
+  constructor(AuthService, i18n) {
     this.authService = AuthService;
-    console.log("AAAA");
+    this.i18n = i18n;
+    this.i18n.setLocale('en')
+      .then(() => {
+        console.log('Locale is ready!');
+      });
     //AuthService.login();
   }
 

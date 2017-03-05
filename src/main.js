@@ -1,4 +1,5 @@
 import environment from './environment';
+import XHR from 'i18next-xhr-backend';
 
 //Configure Bluebird Promises.
 Promise.config({
@@ -27,6 +28,22 @@ export function configure(aurelia) {
   if (environment.testing) {
     aurelia.use.plugin('aurelia-testing');
   }
+
+  //register the plugin
+  aurelia.use.plugin('aurelia-i18n', (instance) => {
+    // register backend plugin
+    instance.i18next.use(XHR);
+
+    return instance.setup({
+      backend: {
+        loadPath: '/i18n/{{lng}}.json',
+      },
+      lng: 'en',
+      attributes: ['t', 'i18n'],
+      fallbackLng: 'en',
+      debug: false
+    });
+  });
 
   aurelia.start().then(() => aurelia.setRoot());
 }

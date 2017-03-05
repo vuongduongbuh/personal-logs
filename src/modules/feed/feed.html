@@ -3,14 +3,13 @@
     <input type="file" files.bind="newConnector.selectedFiles" change.delegate="newConnector.isFileSelected=true" class="pl-input--files pl-input--files--connect">
     <input type="file" files.bind="editedFeed.selectedFiles" change.delegate="editedFeed.isFileSelected=true" class="pl-input--files pl-input--files--edit">
 
-    
     <div class="pl-container">
         <div class="pl-header pl-header--feed">
             <div>
                 <!--<button class="pl-btn pl-btn--main pl-btn--user"><span class="glyphicon glyphicon-user"></span></button>-->
                 <!--<button class="pl-btn pl-btn--main"><span class="glyphicon glyphicon-search"></span> Search</button>-->
                 <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-user"></span></button>
-                <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span> Search</button>
+                <button type="button" class="btn btn-primary" click.trigger="search()"><span class="glyphicon glyphicon-search"></span> Search</button>
             </div>
             <button type="button" class="btn btn-primary" click.delegate="isInputOnFocus = true">Compose</button>
             <!--<button class="pl-btn pl-btn--main" click.delegate="isInputOnFocus = true">Compose</button>-->
@@ -34,7 +33,7 @@
                         <div>
                             <h4>${newFeedLength}</h4>
                             <!--<button class="ladda-button pl-btn pl-btn--main pl-btn--done" data-style="zoom-out" click.delegate="postNewFeed()">Done</button>-->
-                            <button type="button" class="btn btn-primary ladda-button pl-btn--done" data-style="zoom-out"  click.delegate="postNewFeed()">Done</button>
+                            <button type="button" class="btn btn-primary ladda-button pl-btn--done" data-style="zoom-out" click.delegate="postNewFeed()">Done</button>
                         </div>
                     </div>
 
@@ -66,11 +65,19 @@
                     </div>
 
                     <div class="pl-feed__feed--actions" show.bind="isFeedHovered">
-                        <a click.trigger="openConnectionToAFeed(feed)" show.bind="!feed.connectTo && !feed.hasConnection"><span class="glyphicon glyphicon-plus"></span></a>
-                        <!--<a click.trigger="deleteFeed(feed.id, $index)"><span class="glyphicon glyphicon-option-horizontal"></span></a>
-                        <a click.trigger="editFeed(feed, $index)"><span class="glyphicon glyphicon-option-horizontal"></span></a>-->
+                        <a click.trigger="openConnectionToAFeed(feed)"><span class="glyphicon glyphicon-plus"></span></a>
+                        <a click.trigger="showModalConfirmDelete(feed, $index)"><span class="glyphicon glyphicon-option-horizontal"></span></a>
+                        <a click.trigger="showEditedFeed(feed, $index)"><span class="glyphicon glyphicon-option-horizontal"></span></a>
 
-                        <a class="btn-tooltip" title="This is my image's tooltip message!"><span class="glyphicon glyphicon-option-horizontal"></span></a>
+                        <!--<a class="btn-tooltip"><span class="glyphicon glyphicon-option-horizontal"></span></a>-->
+
+                        <!--<div class="tooltip_templates" style="display: none">
+                            <div class="tooltip_content">
+                                <a click.trigger="editFeed(feed, $index)">Edit</a>
+                                <a click.trigger="showModalConfirmDelete(feed.id, $index)">Delete</a>
+                            </div>
+                        </div>-->
+
                     </div>
             </div>
 
@@ -87,7 +94,7 @@
                         <div>
                             <h4>${newConnectorLength}</h4>
                             <!--<button class="ladda-button pl-btn pl-btn--main pl-btn--done" data-style="zoom-out" click.delegate="saveFeed(feed, $index)">Done</button>-->
-                            <button type="button" class="btn btn-primary ladda-button pl-btn--done" data-style="zoom-out"  click.delegate="saveFeed(feed, $index)">Done</button>
+                            <button type="button" class="btn btn-primary ladda-button pl-btn--done" data-style="zoom-out" click.delegate="updateFeed(feed, $index)">Done</button>
                         </div>
                     </div>
 
@@ -110,7 +117,7 @@
                         <div>
                             <h4>${newConnectorLength}</h4>
                             <!--<button class="ladda-button pl-btn pl-btn--main pl-btn--done" data-style="zoom-out" click.delegate="postNewConnector(feed, $index)">Done</button>-->
-                            <button type="button" class="btn btn-primary ladda-button pl-btn--done" data-style="zoom-out"  click.delegate="postNewConnector(feed, $index)">Done</button>
+                            <button type="button" class="btn btn-primary ladda-button pl-btn--done" data-style="zoom-out" click.delegate="postNewConnector(feed, $index)">Done</button>
                         </div>
                     </div>
 
@@ -119,4 +126,6 @@
         </div>
     </div>
     </div>
+
+
 </template>
