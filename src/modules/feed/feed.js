@@ -29,19 +29,20 @@ export class Feed {
         this.isOpenConnectedFeed = [];
         this.newFeed = {};
         this.newConnector = {};
-        this.newFeedLength = 250;
         this.editedFeed = {};
+        this.newFeedLength = 250;
+        this.newEditedFeedLength = 250;
         this.newConnectorLength = 250;
         this.bindingEngine = bindingEngine;
         // subscribe
         bindingEngine.propertyObserver(this.newFeed, 'rawText')
             .subscribe((newValue, oldValue) => {
-                this.newFeedLength = 250 - newValue.length;
+                this.newFeedLength = 250 - newValue.trim().length;
             });
 
         bindingEngine.propertyObserver(this.newConnector, 'rawText')
             .subscribe((newValue, oldValue) => {
-                this.newConnectorLength = 250 - newValue.length;
+                this.newConnectorLength = 250 - newValue.trim().length;
             });
 
         this.getFeeds();
@@ -62,6 +63,7 @@ export class Feed {
         this.appService.getFeeds()
             .then((feeds) => {
                 this.feeds = feeds;
+                console.log(this.feeds);
                 //this.deleteAllFeeds();
                 this.feeds = this.reArrangeFeedsWithConnections();
                 return this.feeds;
@@ -105,13 +107,17 @@ export class Feed {
     }
 
     showEditedFeed(feed, idx) {
-        console.log(feed);
         this.isInputOnFocus = false;
         _.forEach(this.feeds, (value, key) => {
             value.isEdited = false;
         });
         this.editedFeed = _.clone(feed);
         feed.isEdited = true;
+        this.newEditedFeedLength = 250 - this.editedFeed.rawText.length;
+        this.bindingEngine.propertyObserver(this.editedFeed, 'rawText')
+            .subscribe((newValue, oldValue) => {
+                this.newEditedFeedLength = 250 - newValue.trim().length;
+            });
     }
 
     updateFeed(feed, idx) {
@@ -138,34 +144,15 @@ export class Feed {
     }
 
     showModalConfirmDelete(feed, idx) {
-        // this.dialogService.open({ viewModel: ConfirmDeleteModal }).then(response => {
-        //     if (!response.wasCancelled) {
-        //         this.deleteFeed(feed, idx);
-        //     }
-        // });
         this.alertService.confirmDelete().then(() => {
             this.deleteFeed(feed, idx);
         });
     }
 
     deleteFeed(feed, idx) {
-        // let childFeed = null;
-        // _.forEach(this.feeds, (value, key) => {
-        //     if (value.connectTo == feed.id) {
-        //         value.connectTo = feed.connectTo;
-        //         childFeed = value;
-        //     }
-        // })
-
-        // if (childFeed) {
-        //     this.appService.editFeed(childFeed)
-        //         .then((editedFeed) => {
-        //         });
-        // }
-
         this.appService.deleteFeed(feed.id)
             .then((success) => {
-                this.feeds.splice(idx, 1);
+                this.getFeeds();
                 this.alertService.success("Delete feed successfully!");
             });
 
@@ -233,7 +220,8 @@ export class Feed {
             return value.connectTo;
         });
 
-        // while (connectorFeeds.length) {
+        let loop = 10;
+        while (loop) {
             _.forEach(resultFeeds, (result, resultKey) => {
                 _.forEachRight(connectorFeeds, (connector, conectorKey) => {
                     if (connector.connectTo === result.id) {
@@ -244,7 +232,8 @@ export class Feed {
                     }
                 });
             });
-        //}
+            loop--;
+        }
 
         return resultFeeds;
     }

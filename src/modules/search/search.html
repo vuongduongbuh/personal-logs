@@ -1,9 +1,13 @@
 <template>
     <div class="pl-container">
         <div class="pl-search">
-            <input type="text" placeholder="Search" change.delegate="search()">
+            <div class="pl-search__input">
+                <input value.bind="searchModel.keyword" type="text" placeholder="Search for anything" change.delegate="search()"> 
+                <span class="glyphicon glyphicon-search"></span>
+                <span show.bind="isSearching" class="pl-loading"></span>
+            </div>
 
-            <div class="pl-search__esc" click.trigger="esc()">ESC</div>
+            <div class="pl-search__esc" click.trigger="esc()">Esc <span class="glyphicon glyphicon-remove"></span></div>
 
         </div>
     </div>

@@ -1,0 +1,33 @@
+.pl-search {
+    width: 100%;
+    background-color: $font-color-light-grey;
+    display: flex;
+    justify-content: space-between;
+    padding: 40px 40px 15px 200px;
+    color: $font-color-blue;
+
+    &__input {
+        position: relative;
+        input {
+            width: 500px;
+            border: none;
+            border-radius: 3px;
+            padding: 5px;
+            padding-left: 35px;
+        }
+
+        span.glyphicon {
+            position: absolute;
+            left: 10px;
+            top: 7px;
+        }
+    }
+
+    &__esc {
+        cursor: pointer;
+        span.glyphicon {
+            font-weight: 100;
+            font-size: 20px;
+        }
+    }
+}

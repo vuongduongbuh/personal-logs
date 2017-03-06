@@ -36,7 +36,7 @@ export function configure(aurelia) {
 
     return instance.setup({
       backend: {
-        loadPath: '/i18n/{{lng}}.json',
+        loadPath: '/assets/i18n/{{lng}}.json',
       },
       lng: 'en',
       attributes: ['t', 'i18n'],

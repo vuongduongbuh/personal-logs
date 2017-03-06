@@ -31,40 +31,30 @@ body {
     }
 }
 
-.pl-btn {
-    height: 35px;
-    width: 90px;
-    border-radius: 5px;
-    border: none;
-    font-size: 13px;
-    outline: none;
-
-    // &--main {
-    //     color: #fff;
-    //     background-color: $font-color-blue;
-
-    //     span {
-    //         padding: 0 5px;
-    //     }
-
-    //     &:hover {
-    //         color: #fff !important;
-    //         background-color: $font-color-blue !important;
-    //     }
-    // }
-
-    &--blur {
-        color: $font-color-blue;
-        &:hover {
-            color: #000 !important;
-        }
-    }
-
-    &--user {
-        width: 35px;
-    }
+.btn-primary {
+    background-color: $font-color-blue;
 
     &:active {
         background-color: $font-color-blue-bold;
     }
+}
+
+.pl-icon {
+    width: 30px;
+    &--plus {
+        width: 20px;
+    }
+
+    &--more {
+        width: 20px;
+    }
+}
+
+.pl-loading {
+    background:url(../assets/img/loading.gif) no-repeat center center;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 5px;
+    right: 5px;
 }

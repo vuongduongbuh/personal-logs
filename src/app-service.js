@@ -68,9 +68,14 @@ export class AppService {
         });
     }
 
-    search(input) {
-        return this.httpClient.fetch("feeds/" + encodeURIComponent(input), {
-            method: 'get'
+    search(data) {
+        let form = new FormData()
+        _.forEach(data, (value, key) => {
+            form.append(key, value);
+        });
+        return this.httpClient.fetch("feeds/search", {
+            method: 'post',
+            body: form
         }).then(data => data.json());
     }
 }
