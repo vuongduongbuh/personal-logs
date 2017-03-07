@@ -10,5 +10,9 @@ export default function prepareTooltipster() {
     .pipe(changedInPlace({ firstPass: true }))
     .pipe(gulp.dest(`${project.platform.output}/css`));
 
-  return merge(taskCss);
+  const taskThemeCss = gulp.src(`${source}/dist/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-shadow.min.css`)
+    .pipe(changedInPlace({ firstPass: true }))
+    .pipe(gulp.dest(`${project.platform.output}/css`));
+
+  return merge(taskCss, taskThemeCss);
 }

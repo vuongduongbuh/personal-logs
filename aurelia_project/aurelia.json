@@ -143,6 +143,11 @@
             "main": "index"
           },
           {
+            "name": "moment",
+            "path": "../node_modules/moment",
+            "main": "moment"
+          },
+          {
             "name": "ladda",
             "path": "../node_modules/ladda/dist",
             "main": "ladda.min"
