@@ -1,0 +1,13 @@
+.tooltipster-sidetip {
+    height: auto !important;
+    width: 150px;
+
+    a {
+        display: block;
+        cursor: pointer;
+        padding: 5px;
+        &:hover {
+            text-decoration: none;
+        }
+    }
+}

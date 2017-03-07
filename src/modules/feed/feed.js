@@ -144,6 +144,7 @@ export class Feed {
     }
 
     showModalConfirmDelete(feed, idx) {
+        $('.btn-tooltip').tooltipster('close');
         this.alertService.confirmDelete().then(() => {
             this.deleteFeed(feed, idx);
         });
