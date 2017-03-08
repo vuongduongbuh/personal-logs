@@ -16,7 +16,6 @@ import 'hashtags';
 let HashTags = require('hashtags');
 
 import tooltipster from "tooltipster";
-
 const dateFormat = 'h:mm A - DD MMM YYYY';
 
 @inject(BindingEngine, AppService, DialogService, AlertService, Router)
@@ -29,27 +28,13 @@ export class Feed {
         this.assetsUrl = AppConstants.assetsUrl;
         this.router = router;
         this.isOpenConnectedFeed = [];
-        this.newFeed = {};
-        this.newConnector = {};
-        this.editedFeed = {};
         this.newFeedLength = 250;
         this.newEditedFeedLength = 250;
         this.newConnectorLength = 250;
         this.bindingEngine = bindingEngine;
-        // subscribe
-        bindingEngine.propertyObserver(this.newFeed, 'rawText')
-            .subscribe((newValue, oldValue) => {
-                console.log(newValue);
-                this.newFeedLength = 250 - newValue.trim().length;
-            });
 
-        bindingEngine.propertyObserver(this.newConnector, 'rawText')
-            .subscribe((newValue, oldValue) => {
-                this.newConnectorLength = 250 - newValue.trim().length;
-            });
-
+        //Get feeds when init controller
         this.getFeeds();
-
         setTimeout(() => {
             $('.btn-tooltip').tooltipster({
                 theme: 'tooltipster-shadow',
@@ -68,6 +53,7 @@ export class Feed {
                     value.createdAt = moment(value.createdAt).format(dateFormat);
                 });
                 this.feeds = this.reArrangeFeedsWithConnections();
+                this.resetValueAfterActions();
                 return this.feeds;
             });
     }
@@ -80,13 +66,11 @@ export class Feed {
         //Add new feed
         this.appService.postNewFeed(this.newFeed)
             .then((feed) => {
-                this.resetValueAfterActions();
                 this.removeSelectedFile(this.newFeed);
                 this.isInputOnFocus = false;
                 laddaDoneBtn.stop();
-                feed.createdAt = moment(feed.createdAt).format(dateFormat);
-                this.feeds.unshift(feed);
-                this.feeds = this.reArrangeFeedsWithConnections();
+                this.getFeeds();
+
                 this.alertService.success("Post new feed successfully!");
             }, () => {
                 laddaDoneBtn.stop();
@@ -99,11 +83,7 @@ export class Feed {
         //Add new feed
         this.appService.postNewFeed(this.newConnector)
             .then((connectedFeed) => {
-                this.feeds[idx].isConnectionOpened = false;
-                this.feeds[idx].hasConnection = true;
-                this.resetValueAfterActions();
-                this.feeds.splice(idx + 1, 0, connectedFeed);
-                this.feeds = this.reArrangeFeedsWithConnections();
+                this.getFeeds();
                 this.alertService.success("Add new connector successfully!");
             }, () => {
             });
@@ -129,10 +109,7 @@ export class Feed {
         //Update feed
         this.appService.editFeed(this.editedFeed)
             .then((editedFeed) => {
-                this.feeds[idx] = editedFeed;
-                this.resetValueAfterActions();
-                this.feeds = this.reArrangeFeedsWithConnections();
-                feed.isEdited = false;
+                this.getFeeds();
                 this.alertService.success("Edit feed successfully!");
             }, () => {
             });
@@ -144,10 +121,10 @@ export class Feed {
     }
 
     showModalConfirmDelete(feed, idx) {
-        $('.btn-tooltip').tooltipster('close');
         this.alertService.confirmDelete().then(() => {
             this.deleteFeed(feed, idx);
         });
+        $('.btn-tooltip').tooltipster('close');
     }
 
     deleteFeed(feed, idx) {

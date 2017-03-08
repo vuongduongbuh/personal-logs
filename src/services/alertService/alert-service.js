@@ -20,7 +20,7 @@ export class AlertService {
     error(message) {
         return swal({
             title: 'Error!',
-            text: 'Do you want to continue',
+            text: message,
             type: 'error',
             confirmButtonText: 'Cool'
         })

@@ -19,6 +19,7 @@ export class App {
   configureRouter(config, router) {
     this.router = router;
     config.title = 'Personal Log';
+    config.addAuthorizeStep(new AuthorizeStep(this.authService))
     config.map([
       { route: '', moduleId: 'modules/home/home', title: 'Home' },
       { route: 'home', moduleId: 'modules/home/home', title: 'Home' },
@@ -31,3 +32,19 @@ export class App {
   }
 }
 
+class AuthorizeStep {
+
+  constructor(authService) {
+    this.authService = authService;
+  }
+
+  run(navigationInstruction, next) {
+    if (navigationInstruction.getAllInstructions().some(i => i.config.settings.auth)) {
+      if(!this.authService.isTokenValid()) {
+        this.authService.login();
+      }
+    }
+
+    return next();
+  }
+}
