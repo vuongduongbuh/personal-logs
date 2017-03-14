@@ -1,5 +1,36 @@
 {
-    "login": "đây là BBB",
-
-    "signup" : "Đây là AAA"
+    "GENERAL": {
+        "BTN": {
+            "SEARCH": "Search",
+            "COMPOSE": "Compose",
+            "DONE": "Done",
+            "EDIT": "Edit",
+            "DELETE": "Delete"
+        }
+    },
+    "FEED": {
+        "PLACEHOLDER": {
+            "WHAT_ON_YOUR_MIND": "What's on your mind?",
+            "START_TYPING": "Start typing...",
+            "KEEP_TYPING": "Keep typing..."
+        },
+        "CREATE": {
+            "MESSAGE": {
+                "SUCCESS": "Post new feed successfully!",
+                "ERROR": ""
+            }
+        },
+        "CONNECTOR": {
+            "MESSAGE": {
+                "SUCCESS": "Add new connector successfully!",
+                "ERROR": ""
+            }
+        },
+        "EDIT": {
+            "MESSAGE": {
+                "SUCCESS": "Save feed successfully!",
+                "ERROR": ""
+            }
+        }
+    }
 }

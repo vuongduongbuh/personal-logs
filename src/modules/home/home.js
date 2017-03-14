@@ -12,6 +12,6 @@ export class Home {
     }
 
     signUp() {
-        this.authService.signUp();
+        this.authService.register();
     }
 }

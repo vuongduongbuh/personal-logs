@@ -18,14 +18,8 @@ export class AuthService {
       auth: {
         responseType: 'token',
         redirect: false
-      },
-      initialScreen: "signUp"
+      }
     };
-
-    this.auth0lock = new Auth0Lock(AppConstants.auth0ClientId, AppConstants.auth0Domain);
-
-    //register callback
-    this._registerAuthenticationListener();
   }
 
   _registerAuthenticationListener() {
@@ -44,10 +38,17 @@ export class AuthService {
   }
 
   login() {
+    this.auth0Options.initialScreen = "login";
+    this.auth0lock = new Auth0Lock(AppConstants.auth0ClientId, AppConstants.auth0Domain, this.auth0Options);
+    this._registerAuthenticationListener();
     this.auth0lock.show();
   }
 
   register() {
+    this.auth0Options.initialScreen = "signUp";
+    this.auth0lock = new Auth0Lock(AppConstants.auth0ClientId, AppConstants.auth0Domain, this.auth0Options);
+    this._registerAuthenticationListener();
+    this.auth0lock.show();
   }
 
   logout() {

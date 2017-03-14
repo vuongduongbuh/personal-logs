@@ -1,13 +1,18 @@
 .tooltipster-sidetip {
     height: auto !important;
     width: 150px;
+}
 
+.pl-tooltip {
     a {
         display: block;
         cursor: pointer;
         padding: 5px;
         &:hover {
             text-decoration: none;
+        }
+        &:last-child {
+            color: #FFB7C4;
         }
     }
 }
