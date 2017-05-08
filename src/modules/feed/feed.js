@@ -66,7 +66,6 @@ export class Feed {
         //Add new feed
         this.appService.postNewFeed(this.newFeed)
             .then((feed) => {
-                this.removeSelectedFile(this.newFeed);
                 this.isInputOnFocus = false;
                 laddaDoneBtn.stop();
                 this.getFeeds();
@@ -110,7 +109,7 @@ export class Feed {
         this.appService.editFeed(this.editedFeed)
             .then((editedFeed) => {
                 this.getFeeds();
-                this.alertService.success("Edit feed successfully!");
+                this.alertService.success("Save feed successfully!");
             }, () => {
             });
 
@@ -134,11 +133,6 @@ export class Feed {
                 this.alertService.success("Delete feed successfully!");
             });
 
-    }
-
-    removeSelectedFile(feed) {
-        feed.selectedFiles = null;
-        feed.isFileSelected = false;
     }
 
     triggerClickInputFiles(flag) {

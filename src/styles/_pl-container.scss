@@ -33,6 +33,7 @@ body {
 
 .btn-primary {
     background-color: $font-color-blue;
+    font-weight: 100;
 
     &:active {
         background-color: $font-color-blue-bold;

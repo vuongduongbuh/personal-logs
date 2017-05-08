@@ -13,7 +13,7 @@ export class AlertService {
             title: 'Success',
             text: message,
             type: 'success',
-            confirmButtonText: 'Cool'
+            confirmButtonText: 'Ok'
         })
     }
 
@@ -22,7 +22,7 @@ export class AlertService {
             title: 'Error!',
             text: message,
             type: 'error',
-            confirmButtonText: 'Cool'
+            confirmButtonText: 'Ok'
         })
     }
 
