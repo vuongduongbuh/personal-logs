@@ -26,9 +26,9 @@ export class AuthService {
     this.auth0lock.on("authenticated", (authResult) => {
       this.auth0lock.getProfile(authResult.idToken, (error, profile) => {
         if (error) {
-          // Handle error
           return;
         }
+
         localStorage.setItem('id_token', authResult.idToken);
         localStorage.setItem('profile', JSON.stringify(profile));
         this.router.navigate("feeds");
@@ -67,8 +67,6 @@ export class AuthService {
     let expiryDate = new Date();
     expiryDate.setUTCSeconds(jwtExp);
 
-    console.log(new Date());
-    console.log(expiryDate);
     if (new Date() > expiryDate) {
       return false;
     }

@@ -33,7 +33,7 @@ class AuthorizeStep {
 
   run(navigationInstruction, next) {
     if (navigationInstruction.getAllInstructions().some(i => i.config.settings.auth)) {
-      if(!this.authService.isTokenValid()) {
+      if (!this.authService.isTokenValid()) {
         this.authService.login();
       }
     }
