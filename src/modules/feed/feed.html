@@ -1,10 +1,7 @@
 <template>
-    <input type="file" files.bind="newFeed.selectedFiles" 
-            accept="image/*" class="pl-input--files pl-input--files--new">
-    <input type="file" files.bind="newConnector.selectedFiles" accept="image/*"
-        class="pl-input--files pl-input--files--connect">
-        <input type="file" files.bind="editedFeed.selectedFiles" accept="image/*"
-            class="pl-input--files pl-input--files--edit">
+    <input type="file" files.bind="newFeed.selectedFiles" accept="image/*" class="pl-input--files pl-input--files--new">
+    <input type="file" files.bind="newConnector.selectedFiles" accept="image/*" class="pl-input--files pl-input--files--connect">
+    <input type="file" files.bind="editedFeed.selectedFiles" accept="image/*" class="pl-input--files pl-input--files--edit">
 
     <div class="pl-container">
         <div class="pl-header pl-header--feed">
@@ -15,7 +12,9 @@
                     ${'GENERAL.BTN.SEARCH' | t}
                 </button>
             </div>
-            <button type="button" class="btn btn-primary" click.delegate="isInputOnFocus = true">${'GENERAL.BTN.COMPOSE' | t}</button>
+            <button type="button" class="btn btn-primary" click.delegate="isInputOnFocus = true">
+                ${'GENERAL.BTN.COMPOSE' | t}
+                </button>
         </div>
 
         <div class="pl-feed">
@@ -37,7 +36,9 @@
                         <div>
                             <h4>${newFeedLength}</h4>
                             <button type="button" class="btn btn-primary ladda-button pl-btn--done" data-style="zoom-out" click.delegate="postNewFeed()"
-                                disabled.bind="!newFeed.rawText.trim()">${'GENERAL.BTN.DONE' | t}</button>
+                                disabled.bind="!newFeed.rawText.trim()">
+                                ${'GENERAL.BTN.DONE' | t}
+                                </button>
                         </div>
                     </div>
 
@@ -108,7 +109,8 @@
 
                 <div class="pl-feed__compose pl-feed__compose--connector" show.bind="feed.isConnectionOpened">
                     <div class="pl-feed__compose--on-focus">
-                        <textarea maxLength="250" value.bind="newConnector.rawText" rows="3" placeholder="${'FEED.PLACEHOLDER.KEEP_TYPING' | t}" class="pl-input"> </textarea>
+                        <textarea maxLength="250" value.bind="newConnector.rawText" rows="3" placeholder="${'FEED.PLACEHOLDER.KEEP_TYPING' | t}"
+                            class="pl-input"> </textarea>
 
                         <div class="pl-feed__compose--actions">
                             <div>

@@ -5,22 +5,18 @@ import { DialogService } from 'aurelia-dialog';
 import { AppService } from '../../app-service';
 import { AlertService } from '../../services/alertService/alert-service';
 import { AppConstants } from '../../app-constant';
-import "autolinker";
-let Autolinker = require('autolinker');
+import Autolinker from "autolinker";
 import * as _ from 'lodash';
 import moment from 'moment';
 import "spin";
-import "ladda";
-let Ladda = require('ladda');
-import 'hashtags';
-let HashTags = require('hashtags');
+import Ladda from 'ladda';
+import HashTags from 'hashtags';
 
 import tooltipster from "tooltipster";
 const dateFormat = 'h:mm A - DD MMM YYYY';
 
 @inject(BindingEngine, AppService, DialogService, AlertService, Router)
 export class Feed {
-
     constructor(bindingEngine, appService, dialogService, alertService, router) {
         this.appService = appService;
         this.dialogService = dialogService;
