@@ -1,134 +1,160 @@
 <template>
-    <input type="file" files.bind="newFeed.selectedFiles" accept="image/*" class="pl-input--files pl-input--files--new">
-    <input type="file" files.bind="newConnector.selectedFiles" accept="image/*" class="pl-input--files pl-input--files--connect">
-    <input type="file" files.bind="editedFeed.selectedFiles" accept="image/*" class="pl-input--files pl-input--files--edit">
+  <input type="file" files.bind="newFeed.selectedFiles" accept="image/*" class="pl-input--files pl-input--files--new">
+  <input type="file" files.bind="newConnector.selectedFiles" accept="image/*"
+         class="pl-input--files pl-input--files--connect">
+  <input type="file" files.bind="editedFeed.selectedFiles" accept="image/*"
+         class="pl-input--files pl-input--files--edit">
 
-    <div class="pl-container">
-        <div class="pl-header pl-header--feed">
-            <div>
-                <img class="pl-icon pl-icon--user" src="./assets/img/icon-user.png">
-                <button type="button" class="btn btn-primary" click.trigger="search()">
-                    <span class="glyphicon glyphicon-search"></span> 
-                    ${'GENERAL.BTN.SEARCH' | t}
-                </button>
-            </div>
-            <button type="button" class="btn btn-primary" click.delegate="isInputOnFocus = true">
-                ${'GENERAL.BTN.COMPOSE' | t}
-                </button>
-        </div>
-
-        <div class="pl-feed">
-            <div class="pl-feed__compose">
-                <div class="pl-feed__compose--on-blur" click.delegate="isInputOnFocus = true" show.bind="!isInputOnFocus">
-                    <span>${'FEED.PLACEHOLDER.WHAT_ON_YOUR_MIND' | t}</span>
-                </div>
-
-                <div class="pl-feed__compose--on-focus" show.bind="isInputOnFocus">
-                    <textarea maxLength="250" value.bind="newFeed.rawText" rows="3" placeholder="${'FEED.PLACEHOLDER.START_TYPING' | t}" class="pl-input"> </textarea>
-
-                    <div class="pl-feed__compose--actions">
-                        <div>
-                            <a click.trigger="triggerClickInputFiles('new')">
-                                <img class="pl-icon pl-icon--user" src="./assets/img/icon-camera.png">
-                            </a>
-                        </div>
-
-                        <div>
-                            <h4>${newFeedLength}</h4>
-                            <button type="button" class="btn btn-primary ladda-button pl-btn--done" data-style="zoom-out" click.delegate="postNewFeed()"
-                                disabled.bind="!newFeed.rawText.trim()">
-                                ${'GENERAL.BTN.DONE' | t}
-                                </button>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-            <div repeat.for="feed of feeds">
-                <div class="pl-feed__connector pl-feed__connector--front" show.bind="feed.connectTo">
-                </div>
-
-                <div class="pl-feed__feed ${isFeedHovered ? 'pl-feed__feed--on-hover': ''}" mouseover.delegate="isFeedHovered = true" mouseout.delegate="isFeedHovered = false"
-                    show.bind="!feed.isEdited">
-                    <div class="pl-feed__feed--content">
-                        <span show.bind="!feed.url">${feed.text} </span>
-                        <a if.bind="feed.url" href.bind="feed.url" target="_blank">${feed.text} </a>
-                    </div>
-
-                    <div class="pl-feed__feed--image" if.bind="feed.media">
-                        <img class="pl-feed__feed--img" width="550" src="${assetsUrl + feed.media}">
-                    </div>
-
-                    <div class="pl-feed__feed--tag">
-                        <span repeat.for="tag of feed.hashTags">${tag}</span>
-                    </div>
-
-                    <div class="pl-feed__feed--time" show.bind="!isFeedHovered">
-                        <span>${feed.createdAt}</span>
-                    </div>
-
-                    <div class="pl-feed__feed--actions" show.bind="isFeedHovered">
-                        <a click.trigger="openConnectionToAFeed(feed)" show.bind="!feed.hasConnection"><span class="glyphicon glyphicon-plus"></span></a>
-                        <a class="btn-tooltip" data-tooltip-content="${'.' + feed.id}"><span class="glyphicon glyphicon-option-horizontal"></span></a>
-
-                        <div class="tooltip_templates" style="display: none">
-                            <div class="pl-tooltip ${feed.id}">
-                                <a click.trigger="showEditedFeed(feed, $index)">${'GENERAL.BTN.EDIT' | t}</a>
-                                <a click.trigger="showModalConfirmDelete(feed, $index)">${'GENERAL.BTN.DELETE' | t}</a>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-                <div class="pl-feed__compose pl-feed__compose--connector" show.bind="feed.isEdited">
-                    <div class="pl-feed__compose--on-focus">
-                        <textarea maxLength="250" value.bind="editedFeed.rawText" rows="3" placeholder="${'FEED.PLACEHOLDER.START_TYPING' | t}" class="pl-input"> </textarea>
-
-                        <div class="pl-feed__compose--actions">
-                            <div>
-                                <a click.trigger="triggerClickInputFiles('edit')">
-                                    <img class="pl-icon pl-icon--user" src="./assets/img/icon-camera.png">
-                                </a>
-                            </div>
-
-                            <div>
-                                <h4>${newEditedFeedLength}</h4>
-                                <button type="button" class="btn btn-primary ladda-button pl-btn--done" data-style="zoom-out" click.delegate="updateFeed(feed, $index)"
-                                    disabled.bind="!editedFeed.rawText.trim()">${'GENERAL.BTN.DONE' | t}
-                                </button>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-                <div class="pl-feed__connector" show.bind="feed.isConnectionOpened">
-                </div>
-
-                <div class="pl-feed__compose pl-feed__compose--connector" show.bind="feed.isConnectionOpened">
-                    <div class="pl-feed__compose--on-focus">
-                        <textarea maxLength="250" value.bind="newConnector.rawText" rows="3" placeholder="${'FEED.PLACEHOLDER.KEEP_TYPING' | t}"
-                            class="pl-input"> </textarea>
-
-                        <div class="pl-feed__compose--actions">
-                            <div>
-                                <a click.trigger="triggerClickInputFiles('connect')">
-                                    <img class="pl-icon pl-icon--user" src="./assets/img/icon-camera.png">
-                                </a>
-                            </div>
-
-                            <div>
-                                <h4>${newConnectorLength}</h4>
-                                <button type="button" class="btn btn-primary ladda-button pl-btn--done" data-style="zoom-out" click.delegate="postNewConnector(feed, $index)"
-                                    disabled.bind="!newConnector.rawText.trim()">${'GENERAL.BTN.DONE' | t}</button>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
+  <div class="pl-container">
+    <div class="pl-header pl-header--feed">
+      <div>
+        <img class="pl-icon pl-icon--user" src="./assets/img/icon-user.png">
+        <button type="button" class="btn btn-primary" click.trigger="search()">
+          <span class="glyphicon glyphicon-search"></span>
+          ${'GENERAL.BTN.SEARCH' | t}
+        </button>
+      </div>
+      <button type="button" class="btn btn-primary" click.delegate="isInputOnFocus = true">
+        ${'GENERAL.BTN.COMPOSE' | t}
+      </button>
     </div>
+
+    <div class="pl-feed">
+      <div class="pl-feed__compose">
+        <div class="pl-feed__compose--on-blur" click.delegate="isInputOnFocus = true" show.bind="!isInputOnFocus">
+          <span>${'FEED.PLACEHOLDER.WHAT_ON_YOUR_MIND' | t}</span>
+        </div>
+
+        <div class="pl-feed__compose--on-focus" show.bind="isInputOnFocus">
+          <textarea maxLength="250" value.bind="newFeed.rawText" rows="3"
+                    placeholder="${'FEED.PLACEHOLDER.START_TYPING' | t}" class="pl-input"> </textarea>
+
+          <div class="pl-feed__compose--actions">
+            <div>
+              <a click.trigger="triggerClickInputFiles('new')">
+                <img class="pl-icon pl-icon--user" src="./assets/img/icon-camera.png">
+              </a>
+            </div>
+
+            <div>
+              <h4>${newFeedLength}</h4>
+              <button type="button" class="btn btn-primary ladda-button pl-btn--done" data-style="zoom-out"
+                      click.delegate="postNewFeed()"
+                      disabled.bind="!newFeed.rawText.trim()">
+                ${'GENERAL.BTN.DONE' | t}
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div repeat.for="feed of feeds">
+        <div class="pl-feed__connector pl-feed__connector--front" show.bind="feed.connectTo">
+        </div>
+
+        <div class="pl-feed__feed ${isFeedHovered ? 'pl-feed__feed--on-hover': ''}"
+             mouseover.delegate="isFeedHovered = true" mouseout.delegate="isFeedHovered = false"
+             show.bind="!feed.isEdited">
+
+          <div class="pl-feed__feed--content">
+            <span show.bind="!feed.url">
+              ${feed.text}
+            </span>
+            <a if.bind="feed.url" href.bind="feed.url" target="_blank">
+              ${feed.text}
+            </a>
+          </div>
+
+          <div class="pl-feed__feed--image" if.bind="feed.media">
+            <img class="pl-feed__feed--img" width="550" src="${assetsUrl + feed.media}">
+          </div>
+
+          <div class="pl-feed__feed--tag">
+            <span repeat.for="tag of feed.hashTags">${tag}</span>
+          </div>
+
+          <div class="pl-feed__feed--time" show.bind="!isFeedHovered">
+            <span>${feed.createdAt}</span>
+          </div>
+
+          <div class="pl-feed__feed--actions" show.bind="isFeedHovered">
+            <a click.trigger="openConnectionToAFeed(feed)"
+               show.bind="!feed.hasConnection">
+              <span class="glyphicon glyphicon-plus"></span>
+            </a>
+
+            <a class="btn-tooltip" data-tooltip-content="${'.' + feed.id}">
+              <span class="glyphicon glyphicon-option-horizontal"></span>
+            </a>
+
+            <div class="tooltip_templates" style="display: none">
+              <div class="pl-tooltip ${feed.id}">
+                <a click.trigger="showEditedFeed(feed, $index)">
+                  ${'GENERAL.BTN.EDIT' | t}
+                </a>
+                <a click.trigger="showModalConfirmDelete(feed, $index)">
+                  ${'GENERAL.BTN.DELETE' | t}
+                </a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="pl-feed__compose pl-feed__compose--connector" show.bind="feed.isEdited">
+          <div class="pl-feed__compose--on-focus">
+            <textarea maxLength="250" value.bind="editedFeed.rawText" rows="3"
+                      placeholder="${'FEED.PLACEHOLDER.START_TYPING' | t}" class="pl-input">
+            </textarea>
+
+            <div class="pl-feed__compose--actions">
+              <div>
+                <a click.trigger="triggerClickInputFiles('edit')">
+                  <img class="pl-icon pl-icon--user" src="./assets/img/icon-camera.png">
+                </a>
+              </div>
+
+              <div>
+                <h4>${newEditedFeedLength}</h4>
+                <button type="button" class="btn btn-primary ladda-button pl-btn--done" data-style="zoom-out"
+                        click.delegate="updateFeed(feed, $index)"
+                        disabled.bind="!editedFeed.rawText.trim()">${'GENERAL.BTN.DONE' | t}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pl-feed__connector" show.bind="feed.isConnectionOpened">
+        </div>
+
+        <div class="pl-feed__compose pl-feed__compose--connector" show.bind="feed.isConnectionOpened">
+          <div class="pl-feed__compose--on-focus">
+            <textarea maxLength="250" value.bind="newConnector.rawText" rows="3"
+                      placeholder="${'FEED.PLACEHOLDER.KEEP_TYPING' | t}"
+                      class="pl-input">
+            </textarea>
+
+            <div class="pl-feed__compose--actions">
+              <div>
+                <a click.trigger="triggerClickInputFiles('connect')">
+                  <img class="pl-icon pl-icon--user" src="./assets/img/icon-camera.png">
+                </a>
+              </div>
+
+              <div>
+                <h4>${newConnectorLength}</h4>
+                <button type="button" class="btn btn-primary ladda-button pl-btn--done" data-style="zoom-out"
+                        click.delegate="postNewConnector(feed, $index)"
+                        disabled.bind="!newConnector.rawText.trim()">
+                  ${'GENERAL.BTN.DONE' | t}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>

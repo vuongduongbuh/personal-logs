@@ -1,38 +1,39 @@
 <template>
-    <div class="pl-container">
-        <div class="pl-search">
-            <div class="pl-search__input">
-                <input value.bind="searchModel.keyword" type="text" placeholder="Search for anything" change.delegate="search()">
-                <span class="glyphicon glyphicon-search"></span>
-                <span show.bind="isSearching" class="pl-loading"></span>
-            </div>
+  <div class="pl-container">
+    <div class="pl-search">
+      <div class="pl-search__input">
+        <input value.bind="searchModel.keyword" type="text" placeholder="Search for anything"
+               change.delegate="search()">
+        <span class="glyphicon glyphicon-search"></span>
+        <span show.bind="isSearching" class="pl-loading"></span>
+      </div>
 
-            <div class="pl-search__esc" click.trigger="esc()">Esc <span class="glyphicon glyphicon-remove"></span></div>
-        </div>
-        <div class="pl-feed">
-            <div repeat.for="feed of feeds">
-                <div class="pl-feed__connector pl-feed__connector--front" show.bind="feed.connectTo">
-                </div>
-
-                <div class="pl-feed__feed">
-                    <div class="pl-feed__feed--content">
-                        <span show.bind="!feed.url">${feed.text} </span>
-                        <a if.bind="feed.url" href.bind="feed.url" target="_blank">${feed.text} </a>
-                    </div>
-
-                    <div class="pl-feed__feed--image" if.bind="feed.media">
-                        <img class="pl-feed__feed--img" width="650" src="${assetsUrl + feed.media}">
-                    </div>
-
-                    <div class="pl-feed__feed--tag">
-                        <span repeat.for="tag of feed.hashTags">${tag}</span>
-                    </div>
-
-                    <div class="pl-feed__feed--time" show.bind="!isFeedHovered">
-                        <span>05:03AM - 01 Mar 2017 </span>
-                    </div>
-                </div>
-            </div>
-        </div>
+      <div class="pl-search__esc" click.trigger="esc()">Esc <span class="glyphicon glyphicon-remove"></span></div>
     </div>
+    <div class="pl-feed">
+      <div repeat.for="feed of feeds">
+        <div class="pl-feed__connector pl-feed__connector--front" show.bind="feed.connectTo">
+        </div>
+
+        <div class="pl-feed__feed">
+          <div class="pl-feed__feed--content">
+            <span show.bind="!feed.url">${feed.text} </span>
+            <a if.bind="feed.url" href.bind="feed.url" target="_blank">${feed.text} </a>
+          </div>
+
+          <div class="pl-feed__feed--image" if.bind="feed.media">
+            <img class="pl-feed__feed--img" width="650" src="${assetsUrl + feed.media}">
+          </div>
+
+          <div class="pl-feed__feed--tag">
+            <span repeat.for="tag of feed.hashTags">${tag}</span>
+          </div>
+
+          <div class="pl-feed__feed--time" show.bind="!isFeedHovered">
+            <span>05:03AM - 01 Mar 2017 </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>

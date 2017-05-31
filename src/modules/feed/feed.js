@@ -5,14 +5,14 @@ import { DialogService } from 'aurelia-dialog';
 import { AppService } from '../../app-service';
 import { AlertService } from '../../services/alertService/alert-service';
 import { AppConstants } from '../../app-constant';
-import Autolinker from "autolinker";
+import Autolinker from 'autolinker';
 import * as _ from 'lodash';
 import moment from 'moment';
-import "spin";
+import 'spin';
 import Ladda from 'ladda';
 import HashTags from 'hashtags';
+import 'tooltipster';
 
-import tooltipster from "tooltipster";
 const dateFormat = 'h:mm A - DD MMM YYYY';
 
 @inject(BindingEngine, AppService, DialogService, AlertService, Router)
@@ -66,7 +66,7 @@ export class Feed {
                 laddaDoneBtn.stop();
                 this.getFeeds();
 
-                this.alertService.success("Post new feed successfully!");
+                this.alertService.success('Post new feed successfully!');
             }, () => {
                 laddaDoneBtn.stop();
             });
@@ -79,7 +79,7 @@ export class Feed {
         this.appService.postNewFeed(this.newConnector)
             .then((connectedFeed) => {
                 this.getFeeds();
-                this.alertService.success("Add new connector successfully!");
+                this.alertService.success('Add new connector successfully!');
             }, () => {
             });
     }
@@ -105,14 +105,14 @@ export class Feed {
         this.appService.editFeed(this.editedFeed)
             .then((editedFeed) => {
                 this.getFeeds();
-                this.alertService.success("Save feed successfully!");
+                this.alertService.success('Save feed successfully!');
             }, () => {
             });
 
     }
 
     search() {
-        this.router.navigate("search");
+        this.router.navigate('search');
     }
 
     showModalConfirmDelete(feed, idx) {
@@ -126,13 +126,13 @@ export class Feed {
         this.appService.deleteFeed(feed.id)
             .then((success) => {
                 this.getFeeds();
-                this.alertService.success("Delete feed successfully!");
+                this.alertService.success('Delete feed successfully!');
             });
 
     }
 
     triggerClickInputFiles(flag) {
-        let input = document.querySelector(".pl-input--files--" + flag);
+        let input = document.querySelector('.pl-input--files--' + flag);
         input.click();
     }
 
@@ -148,10 +148,10 @@ export class Feed {
         if (HashTags(feed.rawText)) {
             feed.hashTags = HashTags(feed.rawText);
             _.forEach(feed.hashTags, (value, key) => {
-                feed.text = _.replace(feed.text, value, "");
-                feed.hashTags[key] = _.replace(value, "#", "");
+                feed.text = _.replace(feed.text, value, '');
+                feed.hashTags[key] = _.replace(value, '#', '');
             });
-            feed.hashTags = _.join(feed.hashTags, " ");
+            feed.hashTags = _.join(feed.hashTags, ' ');
         }
 
         let autoLinkerOptions = {
@@ -164,7 +164,7 @@ export class Feed {
 
         if (urlParser.length) {
             feed.url = urlParser[0].url;
-            feed.text = _.replace(feed.text, feed.url, "");
+            feed.text = _.replace(feed.text, feed.url, '');
         }
 
         return feed;
