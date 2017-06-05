@@ -6,76 +6,66 @@ import * as _ from 'lodash';
 
 @inject(AuthService)
 export class AppService {
-    constructor(AuthService) {
-        this.httpClient = new HttpClient();
-        this.httpClient.configure(config => {
-            config
-                .withBaseUrl(AppConstants.baseUrl)
-                .withDefaults({
-                    credentials: 'same-origin',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Authorization': 'Bearer ' + localStorage.getItem("id_token")
-                    }
-                })
-                .withInterceptor({
-                    request(request) {
-                        return request;
-                    },
-                    response(response) {
-                        if (response.status == 401) {
-                            AuthService.login();
-                        }
-                        return response;
-                    }
-                });
+  constructor(AuthService) {
+    this.httpClient = new HttpClient();
+    this.httpClient.configure(config => {
+      config
+        .withBaseUrl(AppConstants.baseUrl)
+        .withDefaults({
+          credentials: 'same-origin',
+          headers: {
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ' + localStorage.getItem('id_token')
+          }
+        })
+        .withInterceptor({
+          request(request) {
+            return request;
+          },
+          response(response) {
+            if (response.status == 401) {
+              AuthService.login();
+            }
+            return response;
+          }
         });
-    }
+    });
+  }
 
-    getFeeds() {
-        return this.httpClient.fetch("feeds", {
-            method: "get"
-        }).then(data => data.json());
-    }
+  getFeed() {
+    return this.httpClient.fetch('/v1/feed', {
+      method: 'get'
+    }).then(data => data.json());
+  }
 
-    postNewFeed(feed) {
-        let form = new FormData()
-        _.forEach(feed, (value, key) => {
-            form.append(key, value);
-        });
+  createEntry(entry) {
+    return this.httpClient.fetch('/v1/feed', {
+      method: 'post',
+      body: json(entry)
+    }).then(data => data.json());
+  }
 
-        return this.httpClient.fetch("feeds", {
-            method: 'post',
-            body: form
-        }).then(data => data.json());
-    }
+  updateEntry(entry) {
+    return this.httpClient.fetch('/v1/feed/' + feed.id, {
+      method: 'put',
+      body: json(entry)
+    }).then(data => data.json());
+  }
 
-    editFeed(feed) {
-        let form = new FormData()
-        _.forEach(feed, (value, key) => {
-            form.append(key, value);
-        });
+  deleteEntry(entryId) {
+    return this.httpClient.fetch('/v1/feed/' + entryId, {
+      method: 'delete'
+    });
+  }
 
-        return this.httpClient.fetch("feeds/" + feed.id, {
-            method: 'put',
-            body: form
-        }).then(data => data.json());
-    }
-
-    deleteFeed(id) {
-        return this.httpClient.fetch("feeds/" + id, {
-            method: "delete"
-        });
-    }
-
-    search(data) {
-        let form = new FormData()
-        _.forEach(data, (value, key) => {
-            form.append(key, value);
-        });
-        return this.httpClient.fetch("feeds/search", {
-            method: 'post',
-            body: form
-        }).then(data => data.json());
-    }
+  search(data) {
+    let form = new FormData()
+    _.forEach(data, (value, key) => {
+      form.append(key, value);
+    });
+    return this.httpClient.fetch('feeds/search', {
+      method: 'post',
+      body: form
+    }).then(data => data.json());
+  }
 }

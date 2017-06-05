@@ -1,10 +1,10 @@
-import {inject} from 'aurelia-dependency-injection';
-import {Router} from 'aurelia-router';
-import {BindingEngine} from 'aurelia-binding';
-import {DialogService} from 'aurelia-dialog';
-import {AppService} from '../../app-service';
-import {AlertService} from '../../services/alertService/alert-service';
-import {AppConstants} from '../../app-constant';
+import { inject } from 'aurelia-dependency-injection';
+import { Router } from 'aurelia-router';
+import { BindingEngine } from 'aurelia-binding';
+import { DialogService } from 'aurelia-dialog';
+import { AppService } from '../../app-service';
+import { AlertService } from '../../services/alertService/alert-service';
+import { AppConstants } from '../../app-constant';
 import Autolinker from 'autolinker';
 import * as _ from 'lodash';
 import moment from 'moment';
@@ -14,6 +14,28 @@ import HashTags from 'hashtags';
 import 'tooltipster';
 
 const dateFormat = 'h:mm A - DD MMM YYYY';
+const autolinker = new Autolinker({
+  urls: {
+    schemeMatches: true,
+    wwwMatches: true,
+    tldMatches: true
+  },
+  email: true,
+  phone: true,
+  mention: false,
+  hashtag: false,
+
+  stripPrefix: true,
+  stripTrailingSlash: true,
+  newWindow: true,
+
+  truncate: {
+    length: 0,
+    location: 'end'
+  },
+
+  className: ''
+});
 
 @inject(BindingEngine, AppService, DialogService, AlertService, Router)
 export class Feed {
@@ -24,19 +46,18 @@ export class Feed {
     this.assetsUrl = AppConstants.assetsUrl;
     this.router = router;
     this.isOpenConnectedFeed = [];
-    this.newFeedLength = 250;
-    this.newEditedFeedLength = 250;
-    this.newConnectorLength = 250;
     this.bindingEngine = bindingEngine;
 
+    this.entryLength = 250;
+
     //Get feeds when init controller
-    this.getFeeds();
+    this.getFeed();
   }
 
-  getFeeds() {
-    this.appService.getFeeds()
-      .then((feeds) => {
-        this.feeds = feeds
+  getFeed() {
+    this.appService.getFeed()
+      .then((entries) => {
+        this.entries = entries
           .map(entry => {
             entry.createdAt = moment(entry.createdAt).format(dateFormat);
             return entry;
@@ -52,141 +73,124 @@ export class Feed {
           });
         }, 500);
 
-        this.feeds = this.reArrangeFeedsWithConnections();
+        this.entries = this.parseFeedEentries();
         this.resetValueAfterActions();
-        return this.feeds;
+        return this.entries;
       });
   }
 
-  postNewFeed() {
+  createEntry() {
     let laddaDoneBtn = Ladda.create(document.querySelector('.pl-btn--done'));
     laddaDoneBtn.start();
 
-    this.newFeed = this.convertRawFeedToFeed(this.newFeed);
-    //Add new feed
-    this.appService.postNewFeed(this.newFeed)
+    this.newEntry = this.convertTextToFeedEntry(this.newEntry);
+    return this.appService.createEntry(this.newEntry)
       .then(feed => {
         this.isInputOnFocus = false;
-
         laddaDoneBtn.stop();
-        this.getFeeds();
-      }, () => {
+        return this.getFeed();
+      })
+      .catch(err => {
         laddaDoneBtn.stop();
       });
   }
 
   postNewConnector(feed, idx) {
-    this.newConnector = this.convertRawFeedToFeed(this.newConnector);
+    this.newConnector = this.convertTextToFeedEntry(this.newConnector);
     this.newConnector.connectTo = feed.id;
     //Add new feed
-    this.appService.postNewFeed(this.newConnector)
+    this.appService.createEntry(this.newConnector)
       .then(connectedFeed => {
-        this.getFeeds();
+        this.getFeed();
       }, () => {
       });
   }
 
-  showEditedFeed(feed, idx) {
+  onEntryEdit(entry, idx) {
     this.isInputOnFocus = false;
-    _.forEach(this.feeds, (value, key) => {
-      value.isEdited = false;
-    });
 
-    this.editedFeed = _.clone(feed);
-    feed.isEdited = true;
-    this.newEditedFeedLength = 250 - this.editedFeed.rawText.length;
-    this.bindingEngine.propertyObserver(this.editedFeed, 'rawText')
-      .subscribe((newValue, oldValue) => {
-        this.newEditedFeedLength = 250 - newValue.trim().length;
+    this.entries = this.entries
+      .map(entry => {
+        entry.isEdited = false;
+        return entry;
       });
+
+    this.entryClone = _.clone(entry);
+    this.entryClone.content = this.entryClone.rawContent;
+
+    entry.isEdited = true;
+
+    this.entryLength = 250 - this.entryClone.content.length;
     $('.btn-tooltip').tooltipster('close');
   }
 
-  updateFeed(feed, idx) {
-    this.editedFeed = this.convertRawFeedToFeed(this.editedFeed);
-    //Update feed
-    this.appService.editFeed(this.editedFeed)
-      .then((editedFeed) => {
-        this.getFeeds();
-      }, () => {
+  updateEntry(entry, idx) {
+    let parsedEntry = this.convertTextToFeedEntry(entry);
+    return this.appService.updateEntry(parsedEntry)
+      .then(() => {
+        return this.getFeed();
       });
+  }
 
+  onEntryDelete(feed, idx) {
+    this.deleteEntry(feed, idx);
+    $('.btn-tooltip').tooltipster('close');
+  }
+
+  deleteEntry(feed, idx) {
+    return this.appService.deleteEntry(feed.id)
+      .then(() => {
+        return this.getFeed();
+      });
   }
 
   search() {
     this.router.navigate('search');
   }
 
-  showModalConfirmDelete(feed, idx) {
-    this.alertService.confirmDelete()
-      .then(() => {
-        this.deleteFeed(feed, idx);
-      });
-    $('.btn-tooltip').tooltipster('close');
-  }
-
-  deleteFeed(feed, idx) {
-    this.appService.deleteFeed(feed.id)
-      .then(() => {
-        this.getFeeds();
-      });
-
-  }
-
   triggerClickInputFiles(flag) {
-    let input = document.querySelector('.pl-input--files--' + flag);
-    input.click();
+    document.querySelector('.pl-input--files--' + flag).click();
   }
 
-  convertRawFeedToFeed(rawFeed) {
-    let feed = rawFeed;
+  convertTextToFeedEntry(rawEntry) {
+    let entry = rawEntry;
+
     //Check if file is selected
-    if (feed.selectedFiles) {
-      feed.file = feed.selectedFiles[0];
+    if (entry.selectedFiles) {
+      entry.file = entry.selectedFiles[0];
     }
 
-    //Convert rawText to hashTags & text
-    feed.text = feed.rawText;
-    if (HashTags(feed.rawText)) {
-      feed.hashTags = HashTags(feed.rawText);
-      _.forEach(feed.hashTags, (value, key) => {
-        feed.text = _.replace(feed.text, value, '');
-        feed.hashTags[key] = _.replace(value, '#', '');
+    entry.hashTags = [];
+    if (HashTags(entry.content)) {
+      entry.hashTags = HashTags(entry.content);
+      _.forEach(entry.hashTags, (value, key) => {
+        entry.text = _.replace(entry.text, value, '');
+        entry.hashTags[key] = _.replace(value, '#', '');
       });
-      feed.hashTags = _.join(feed.hashTags, ' ');
+      entry.hashTags = _.join(entry.hashTags, ' ');
     }
 
-    let autoLinkerOptions = {
-      email: false,
-      phone: false
-    };
+    entry.rawContent = entry.content;
+    entry.content = autolinker.link(entry.content);
 
-    let autoLinker = new Autolinker(autoLinkerOptions);
-    let urlParser = autoLinker.parse(feed.rawText);
-
-    if (urlParser.length) {
-      feed.url = urlParser[0].url;
-      feed.text = _.replace(feed.text, feed.url, '');
-    }
-
-    return feed;
+    return entry;
   }
 
   openConnectionToAFeed(feed) {
-    _.forEach(this.feeds, (value, key) => {
-      this.feeds[key].isConnectionOpened = false;
+    _.forEach(this.entries, (value, key) => {
+      this.entries[key].isConnectionOpened = false;
     });
 
     feed.isConnectionOpened = true;
     this.isInputOnFocus = false;
   }
 
-  reArrangeFeedsWithConnections() {
-    let resultFeeds = _.filter(this.feeds, (value) => {
+  parseFeedEentries() {
+    let resultFeeds = _.filter(this.entries, (value) => {
       return !value.connectTo;
     });
 
-    let connectorFeeds = _.filter(this.feeds, (value) => {
+    let connectorFeeds = _.filter(this.entries, (value) => {
       return value.connectTo;
     });
 
@@ -209,20 +213,20 @@ export class Feed {
   }
 
   resetValueAfterActions() {
-    this.newFeed = {};
-    this.bindingEngine.propertyObserver(this.newFeed, 'rawText')
+    this.newEntry = {};
+    this.bindingEngine.propertyObserver(this.newEntry, 'content')
       .subscribe((newValue, oldValue) => {
-        this.newFeedLength = 250 - newValue.trim().length;
+        this.entryLength = 250 - newValue.trim().length;
       });
 
     this.newConnector = {};
-    this.bindingEngine.propertyObserver(this.newConnector, 'rawText')
+    this.bindingEngine.propertyObserver(this.newConnector, 'content')
       .subscribe((newValue, oldValue) => {
         this.newConnectorLength = 250 - newValue.trim().length;
       });
 
     this.editedFeed = {};
-    this.bindingEngine.propertyObserver(this.editedFeed, 'rawText')
+    this.bindingEngine.propertyObserver(this.editedFeed, 'content')
       .subscribe((newValue, oldValue) => {
         this.newEditedFeedLength = 250 - newValue.trim().length;
       });
