@@ -48,6 +48,7 @@ export class Feed {
     this.isOpenConnectedFeed = [];
     this.bindingEngine = bindingEngine;
 
+    this.entryClone = {};
     this.entryLength = 250;
 
     //Get feeds when init controller
@@ -95,14 +96,14 @@ export class Feed {
       });
   }
 
-  postNewConnector(feed, idx) {
-    this.newConnector = this.convertTextToFeedEntry(this.newConnector);
-    this.newConnector.connectTo = feed.id;
-    //Add new feed
-    this.appService.createEntry(this.newConnector)
+  createConnectedEntry(entry, idx) {
+    this.newConnectedEntry = this.convertTextToFeedEntry(this.newConnectedEntry);
+    this.newConnectedEntry.relatedTo = entry.id;
+
+    return this.appService
+      .createEntry(this.newConnectedEntry)
       .then(connectedFeed => {
-        this.getFeed();
-      }, () => {
+        return this.getFeed();
       });
   }
 
@@ -115,7 +116,7 @@ export class Feed {
         return entry;
       });
 
-    this.entryClone = _.clone(entry);
+    this.entryClone = _.cloneDeep(entry);
     this.entryClone.content = this.entryClone.rawContent;
 
     entry.isEdited = true;
@@ -125,7 +126,7 @@ export class Feed {
   }
 
   updateEntry(entry, idx) {
-    let parsedEntry = this.convertTextToFeedEntry(entry);
+    let parsedEntry = this.convertTextToFeedEntry(this.entryClone);
     return this.appService.updateEntry(parsedEntry)
       .then(() => {
         return this.getFeed();
@@ -159,57 +160,67 @@ export class Feed {
     if (entry.selectedFiles) {
       entry.file = entry.selectedFiles[0];
     }
+    entry.rawContent = entry.content;
 
-    entry.hashTags = [];
-    if (HashTags(entry.content)) {
-      entry.hashTags = HashTags(entry.content);
-      _.forEach(entry.hashTags, (value, key) => {
-        entry.text = _.replace(entry.text, value, '');
-        entry.hashTags[key] = _.replace(value, '#', '');
-      });
-      entry.hashTags = _.join(entry.hashTags, ' ');
+    //parse hashtags
+    entry.tags = '';
+    entry.hashtags = [];
+
+    let hashtags = HashTags(entry.content);
+    if (hashtags && hashtags.length) {
+      hashtags = hashtags
+        .map((hashtag, idx) => {
+          entry.content = _.replace(entry.content, hashtag, '');
+          hashtag = _.replace(hashtag, '#', '');
+          return hashtag;
+        });
+      entry.tags = hashtags.join(',');
     }
 
-    entry.rawContent = entry.content;
+    //parse links
     entry.content = autolinker.link(entry.content);
 
     return entry;
   }
 
-  openConnectionToAFeed(feed) {
-    _.forEach(this.entries, (value, key) => {
-      this.entries[key].isConnectionOpened = false;
-    });
+  onEntryConnect(entry) {
+    this.entries = this.entries
+      .map(entry => {
+        entry.isConnectionOpened = false;
+        return entry;
+      });
 
-    feed.isConnectionOpened = true;
+    entry.isConnectionOpened = true;
     this.isInputOnFocus = false;
   }
 
   parseFeedEentries() {
-    let resultFeeds = _.filter(this.entries, (value) => {
-      return !value.connectTo;
-    });
+    let entriesWithoutRelations = this.entries
+      .filter(entry => {
+        return !entry.relatedTo;
+      });
+    let relatedEntries = this.entries
+      .filter(entry => {
+        return entry.relatedTo;
+      });
 
-    let connectorFeeds = _.filter(this.entries, (value) => {
-      return value.connectTo;
-    });
-
-    let loop = 10;
-    while (loop) {
-      _.forEach(resultFeeds, (result, resultKey) => {
-        _.forEachRight(connectorFeeds, (connector, conectorKey) => {
-          if (connector.connectTo === result.id) {
-            result.hasConnection = true;
-            resultFeeds.splice(resultKey + 1, 0, connector);
-            connectorFeeds.splice(conectorKey, 1);
-
+    let entriesLoopIdx = 10;
+    while (entriesLoopIdx) {
+      _.forEach(entriesWithoutRelations, (entry, entryIdx) => {
+        _.forEachRight(relatedEntries, (relatedEntry, relatedEntryIdx) => {
+          if (relatedEntry.relatedTo !== entry.id) {
+            return;
           }
+
+          entry.hasRelatedEntries = true;
+          entriesWithoutRelations.splice(entryIdx + 1, 0, relatedEntry);
+          relatedEntries.splice(relatedEntryIdx, 1);
         });
       });
-      loop--;
+      entriesLoopIdx--;
     }
 
-    return resultFeeds;
+    return entriesWithoutRelations;
   }
 
   resetValueAfterActions() {
@@ -219,10 +230,10 @@ export class Feed {
         this.entryLength = 250 - newValue.trim().length;
       });
 
-    this.newConnector = {};
-    this.bindingEngine.propertyObserver(this.newConnector, 'content')
+    this.newConnectedEntry = {};
+    this.bindingEngine.propertyObserver(this.newConnectedEntry, 'content')
       .subscribe((newValue, oldValue) => {
-        this.newConnectorLength = 250 - newValue.trim().length;
+        this.newConnectedEntryLength = 250 - newValue.trim().length;
       });
 
     this.editedFeed = {};

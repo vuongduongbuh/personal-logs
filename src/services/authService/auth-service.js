@@ -12,7 +12,7 @@ export class AuthService {
       language: 'en',
       languageDictionary: {
         emailInputPlaceholder: "Email",
-        title: "Personal Logs",
+        title: "ankker.com",
         forgotPasswordAction: "Forgot your password?"
       },
       auth: {
@@ -24,7 +24,7 @@ export class AuthService {
 
   _registerAuthenticationListener() {
     this.auth0lock.on("authenticated", (authResult) => {
-      this.auth0lock.getProfile(authResult.idToken, (error, profile) => {
+      this.auth0lock.getUserInfo(authResult.accessToken, (error, profile) => {
         if (error) {
           return;
         }

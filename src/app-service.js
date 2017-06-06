@@ -32,29 +32,53 @@ export class AppService {
     });
   }
 
+  _parseFeedEntry(entry) {
+    if (entry.tags && entry.tags != '') {
+      entry.hashtags = entry.tags.split(',')
+    }
+    return entry;
+  }
+
   getFeed() {
-    return this.httpClient.fetch('/v1/feed', {
-      method: 'get'
-    }).then(data => data.json());
+    return this.httpClient
+      .fetch('/v1/feed', {
+        method: 'GET'
+      })
+      .then(data => {
+        return data.json();
+      })
+      .then(entries => {
+        return entries
+          .map(entry => {
+            return this._parseFeedEntry(entry);
+          });
+      });
   }
 
   createEntry(entry) {
     return this.httpClient.fetch('/v1/feed', {
-      method: 'post',
+      method: 'POST',
       body: json(entry)
     }).then(data => data.json());
   }
 
-  updateEntry(entry) {
-    return this.httpClient.fetch('/v1/feed/' + feed.id, {
-      method: 'put',
-      body: json(entry)
-    }).then(data => data.json());
+  updateEntry(updateEntry) {
+    return this.httpClient
+      .fetch('/v1/feed/' + updateEntry.id, {
+        method: 'PUT',
+        body: json(updateEntry)
+      })
+      .then(data => {
+        return data.json();
+      })
+      .then(entry => {
+        return this._parseFeedEntry(entry);
+      });
   }
 
   deleteEntry(entryId) {
     return this.httpClient.fetch('/v1/feed/' + entryId, {
-      method: 'delete'
+      method: 'DELETE'
     });
   }
 
@@ -64,7 +88,7 @@ export class AppService {
       form.append(key, value);
     });
     return this.httpClient.fetch('feeds/search', {
-      method: 'post',
+      method: 'POST',
       body: form
     }).then(data => data.json());
   }
