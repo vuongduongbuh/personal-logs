@@ -82,14 +82,34 @@ export class AppService {
     });
   }
 
-  search(data) {
-    let form = new FormData()
-    _.forEach(data, (value, key) => {
-      form.append(key, value);
-    });
-    return this.httpClient.fetch('feeds/search', {
+  uploadFiles(file) {
+    if (file) {
+      return this.httpClient.fetch('/v1/upload', {
+        method: 'POST',
+        body: file,
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+      }).then(data => {
+        return data.json();
+      })
+    } else {
+      return new Promise((resolve) => { resolve(file); });
+    }
+  }
+
+  search(value) {
+    return this.httpClient.fetch('/v1/search', {
       method: 'POST',
-      body: form
-    }).then(data => data.json());
+      body: json({ query: value })
+      // body: form
+    }).then(data => {
+      return data.json();
+    }).then(entries => {
+      return entries
+        .map(entry => {
+          return this._parseFeedEntry(entry);
+        });
+    });
   }
 }

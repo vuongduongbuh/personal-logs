@@ -10,10 +10,8 @@ import * as _ from 'lodash';
 import moment from 'moment';
 import 'spin';
 import Ladda from 'ladda';
-import HashTags from 'hashtags';
 import 'tooltipster';
 
-const dateFormat = 'h:mm A - DD MMM YYYY';
 const autolinker = new Autolinker({
   urls: {
     schemeMatches: true,
@@ -58,13 +56,13 @@ export class Feed {
   getFeed() {
     this.appService.getFeed()
       .then((entries) => {
+
         this.entries = entries
           .map(entry => {
-            entry.createdAt = moment(entry.createdAt).format(dateFormat);
+            entry.createdAt = moment(entry.createdAt).format(AppConstants.dateFormat);
             return entry;
           });
 
-        //reattach tooltipster
         setTimeout(() => {
           $('.btn-tooltip').tooltipster({
             theme: 'tooltipster-shadow',
@@ -74,7 +72,7 @@ export class Feed {
           });
         }, 500);
 
-        this.entries = this.parseFeedEentries();
+        this.entries = this.parseFeedEntries();
         this.resetValueAfterActions();
         return this.entries;
       });
@@ -83,16 +81,21 @@ export class Feed {
   createEntry() {
     let laddaDoneBtn = Ladda.create(document.querySelector('.pl-btn--done'));
     laddaDoneBtn.start();
-
     this.newEntry = this.convertTextToFeedEntry(this.newEntry);
-    return this.appService.createEntry(this.newEntry)
-      .then(feed => {
-        this.isInputOnFocus = false;
-        laddaDoneBtn.stop();
-        return this.getFeed();
-      })
-      .catch(err => {
-        laddaDoneBtn.stop();
+    return this.appService.uploadFiles(this.newEntry.file)
+      .then((path) => {
+        if (path) {
+          this.newEntry.media = path.path;
+        }
+        return this.appService.createEntry(this.newEntry)
+          .then(feed => {
+            this.isInputOnFocus = false;
+            laddaDoneBtn.stop();
+            return this.getFeed();
+          })
+          .catch(err => {
+            laddaDoneBtn.stop();
+          });
       });
   }
 
@@ -100,10 +103,19 @@ export class Feed {
     this.newConnectedEntry = this.convertTextToFeedEntry(this.newConnectedEntry);
     this.newConnectedEntry.relatedTo = entry.id;
 
-    return this.appService
-      .createEntry(this.newConnectedEntry)
-      .then(connectedFeed => {
-        return this.getFeed();
+    let laddaDoneBtn = Ladda.create(document.querySelector('.pl-btn--done'));
+    laddaDoneBtn.start();
+    return this.appService.uploadFiles(this.newConnectedEntry.file)
+      .then((path) => {
+        if (path) {
+          this.newConnectedEntry.media = path.path;
+        }
+        return this.appService
+          .createEntry(this.newConnectedEntry)
+          .then(connectedFeed => {
+            laddaDoneBtn.stop();
+            return this.getFeed();
+          });
       });
   }
 
@@ -117,19 +129,26 @@ export class Feed {
       });
 
     this.entryClone = _.cloneDeep(entry);
-    this.entryClone.content = this.entryClone.rawContent;
-
+    this.entryClone.content = _.cloneDeep(this.entryClone.rawContent);
     entry.isEdited = true;
-
     this.entryLength = 250 - this.entryClone.content.length;
     $('.btn-tooltip').tooltipster('close');
   }
 
   updateEntry(entry, idx) {
+    let laddaDoneBtn = Ladda.create(document.querySelector('.pl-btn--done'));
+    laddaDoneBtn.start();
     let parsedEntry = this.convertTextToFeedEntry(this.entryClone);
-    return this.appService.updateEntry(parsedEntry)
-      .then(() => {
-        return this.getFeed();
+    return this.appService.uploadFiles(parsedEntry.file)
+      .then((path) => {
+        if (path) {
+          parsedEntry.media = path.path;
+        }
+        return this.appService.updateEntry(parsedEntry)
+          .then(() => {
+            laddaDoneBtn.stop();
+            return this.getFeed();
+          });
       });
   }
 
@@ -160,22 +179,7 @@ export class Feed {
     if (entry.selectedFiles) {
       entry.file = entry.selectedFiles[0];
     }
-    entry.rawContent = entry.content;
-
-    //parse hashtags
-    entry.tags = '';
-    entry.hashtags = [];
-
-    let hashtags = HashTags(entry.content);
-    if (hashtags && hashtags.length) {
-      hashtags = hashtags
-        .map((hashtag, idx) => {
-          entry.content = _.replace(entry.content, hashtag, '');
-          hashtag = _.replace(hashtag, '#', '');
-          return hashtag;
-        });
-      entry.tags = hashtags.join(',');
-    }
+    entry.rawContent = _.cloneDeep(entry.content);
 
     //parse links
     entry.content = autolinker.link(entry.content);
@@ -194,7 +198,7 @@ export class Feed {
     this.isInputOnFocus = false;
   }
 
-  parseFeedEentries() {
+  parseFeedEntries() {
     let entriesWithoutRelations = this.entries
       .filter(entry => {
         return !entry.relatedTo;
@@ -239,7 +243,7 @@ export class Feed {
     this.editedFeed = {};
     this.bindingEngine.propertyObserver(this.editedFeed, 'content')
       .subscribe((newValue, oldValue) => {
-        this.newEditedFeedLength = 250 - newValue.trim().length;
+        this.newEditedEntryLength = 250 - newValue.trim().length;
       });
   }
 }

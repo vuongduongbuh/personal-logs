@@ -163,11 +163,6 @@
             "main": "aurelia-dialog"
           },
           {
-            "name": "hashtags",
-            "path": "../node_modules/hashtags",
-            "main": "index"
-          },
-          {
             "name": "autolinker",
             "path": "../node_modules/autolinker/dist",
             "main": "Autolinker.min"
