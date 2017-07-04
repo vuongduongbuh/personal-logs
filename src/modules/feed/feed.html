@@ -1,7 +1,7 @@
 <template>
-  <input type="file" files.bind="newFeed.selectedFiles" accept="image/*" class="pl-input--files pl-input--files--new">
+  <input type="file" files.bind="newEntry.selectedFiles" accept="image/*" class="pl-input--files pl-input--files--new">
   <input type="file" files.bind="newConnectedEntry.selectedFiles" accept="image/*" class="pl-input--files pl-input--files--connect">
-  <input type="file" files.bind="editedFeed.selectedFiles" accept="image/*" class="pl-input--files pl-input--files--edit">
+  <input type="file" files.bind="entryClone.selectedFiles" accept="image/*" class="pl-input--files pl-input--files--edit">
 
   <div class="pl-container">
     <div class="pl-header pl-header--feed">
@@ -23,7 +23,7 @@
           <span>${'FEED.PLACEHOLDER.WHAT_ON_YOUR_MIND' | t}</span>
         </div>
 
-        <div class="pl-feed__compose--on-focus" show.bind="isInputOnFocus">
+        <div class="pl-feed__compose--on-focus" if.bind="isInputOnFocus">
           <textarea class="pl-input" maxLength="250" rows="3" value.bind="newEntry.content" placeholder="${'FEED.PLACEHOLDER.START_TYPING' | t}">
           </textarea>
 
@@ -71,6 +71,7 @@
             <span>${entry.createdAt}</span>
           </div>
 
+          <!-- feed actions -->
           <div class="pl-feed__feed--actions" show.bind="isFeedHovered">
             <a click.trigger="onEntryConnect(entry)" show.bind="!entry.hasRelatedEntries">
               <span class="glyphicon glyphicon-plus"></span>
@@ -91,9 +92,10 @@
               </div>
             </div>
           </div>
+          <!-- end feed actions -->
         </div>
 
-        <div class="pl-feed__compose pl-feed__compose--connector" show.bind="entry.isEdited">
+        <div class="pl-feed__compose pl-feed__compose--connector" if.bind="entry.isEdited">
           <div class="pl-feed__compose--on-focus">
             <textarea maxLength="250" value.bind="entryClone.content" rows="3" placeholder="${'FEED.PLACEHOLDER.START_TYPING' | t}" class="pl-input">
             </textarea>
@@ -116,10 +118,10 @@
           </div>
         </div>
 
-        <div class="pl-feed__connector" show.bind="entry.isConnectionOpened">
+        <div class="pl-feed__connector" if.bind="entry.isConnectionOpened">
         </div>
 
-        <div class="pl-feed__compose pl-feed__compose--connector" show.bind="entry.isConnectionOpened">
+        <div class="pl-feed__compose pl-feed__compose--connector" if.bind="entry.isConnectionOpened">
           <div class="pl-feed__compose--on-focus">
             <textarea class="pl-input" maxLength="250" value.bind="newConnectedEntry.content" rows="3" placeholder="${'FEED.PLACEHOLDER.KEEP_TYPING' | t}">
             </textarea>
@@ -132,7 +134,7 @@
               </div>
 
               <div>
-                <h4>${newConnectedEntryLength}</h4>
+                <h4>${entryLength}</h4>
                 <button type="button" class="btn btn-primary ladda-button pl-btn--done" data-style="zoom-out" click.delegate="createConnectedEntry(entry, $index)"
                   disabled.bind="!newConnectedEntry.content.trim()">
                   ${'GENERAL.BTN.DONE' | t}
