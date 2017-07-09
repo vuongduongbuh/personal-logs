@@ -5,14 +5,18 @@
 
   <div class="pl-container">
     <div class="pl-header pl-header--feed">
-      <div>
-        <img class="pl-icon pl-icon--user" src="./assets/img/icon-user.png">
-        <button type="button" class="btn btn-primary" click.trigger="search()">
-          <span class="glyphicon glyphicon-search"></span>
-          ${'GENERAL.BTN.SEARCH' | t}
+      <div class="pl-header--feed__user">
+        <button type="button" class="btn btn--primary"> 
+            <span class="icon-user"> </span>
+        </button>
+        
+        <!--<img class="pl-icon pl-icon--user" src="./assets/img/icon-user.png">-->
+        <button type="button" class="btn btn--primary" click.trigger="search()">
+          <span class="icon-search"></span>
+          ${'GENERAL.BTN.SEARCH' | t} 
         </button>
       </div>
-      <button type="button" class="btn btn-primary" click.delegate="isInputOnFocus = true">
+      <button type="button" class="btn btn--primary" click.delegate="isInputOnFocus = true">
         ${'GENERAL.BTN.COMPOSE' | t}
       </button>
     </div>
@@ -30,13 +34,14 @@
           <div class="pl-feed__compose--actions">
             <div>
               <a click.trigger="triggerClickInputFiles('new')">
-                <img class="pl-icon pl-icon--user" src="./assets/img/icon-camera.png">
+                <span class="icon-camera"> </span>
+                <!--<img class="pl-icon pl-icon--user" src="./assets/img/icon-camera.png">-->
               </a>
             </div>
 
             <div>
               <h4>${entryLength}</h4>
-              <button type="button" class="btn btn-primary ladda-button pl-btn--done" data-style="zoom-out" click.delegate="createEntry()"
+              <button type="button" class="btn btn--primary ladda-button pl-btn--done" data-style="zoom-out" click.delegate="createEntry()"
                 disabled.bind="!newEntry.content.trim()">
                 ${'GENERAL.BTN.DONE' | t}
               </button>
@@ -74,11 +79,11 @@
           <!-- feed actions -->
           <div class="pl-feed__feed--actions" show.bind="isFeedHovered">
             <a click.trigger="onEntryConnect(entry)" show.bind="!entry.hasRelatedEntries">
-              <span class="glyphicon glyphicon-plus"></span>
+              <span class="icon-plus"></span>
             </a>
 
             <a class="btn-tooltip" data-tooltip-content="${'.' + entry.id}">
-              <span class="glyphicon glyphicon-option-horizontal"></span>
+              <span class="icon-more"></span>
             </a>
 
             <div class="tooltip_templates" style="display: none">
@@ -103,13 +108,13 @@
             <div class="pl-feed__compose--actions">
               <div>
                 <a click.trigger="triggerClickInputFiles('edit')">
-                  <img class="pl-icon pl-icon--user" src="./assets/img/icon-camera.png">
+                  <span class="icon-camera"> </span>
                 </a>
               </div>
 
               <div>
                 <h4>${entryLength}</h4>
-                <button type="button" class="btn btn-primary ladda-button pl-btn--done" data-style="zoom-out" click.delegate="updateEntry(entryClone, $index)"
+                <button type="button" class="btn btn--primary ladda-button pl-btn--done" data-style="zoom-out" click.delegate="updateEntry(entryClone, $index)"
                   disabled.bind="!entryClone.content.trim()">
                   ${'GENERAL.BTN.DONE' | t}
                 </button>
@@ -129,13 +134,15 @@
             <div class="pl-feed__compose--actions">
               <div>
                 <a click.trigger="triggerClickInputFiles('connect')">
-                  <img class="pl-icon pl-icon--user" src="./assets/img/icon-camera.png">
+
+                  <span class="icon-camera"> </span>
+                  <!--<img class="pl-icon pl-icon--user" src="./assets/img/icon-camera.png">-->
                 </a>
               </div>
 
               <div>
                 <h4>${entryLength}</h4>
-                <button type="button" class="btn btn-primary ladda-button pl-btn--done" data-style="zoom-out" click.delegate="createConnectedEntry(entry, $index)"
+                <button type="button" class="btn btn--primary ladda-button pl-btn--done" data-style="zoom-out" click.delegate="createConnectedEntry(entry, $index)"
                   disabled.bind="!newConnectedEntry.content.trim()">
                   ${'GENERAL.BTN.DONE' | t}
                 </button>

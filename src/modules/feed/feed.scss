@@ -87,6 +87,7 @@
     }
 
     &__feed {
+        position: relative;
         padding: 15px;
         margin-top: 20px;
         margin-left: 12px;
@@ -94,8 +95,8 @@
         color: $font-color-dark-grey;
         font-size: 14px;
         cursor: pointer;
-        border: 2px solid $font-color-light-blue;
-
+        border: 1px solid $font-color-light-blue;
+        box-shadow: 0 0 2px $font-color-light-blue;
 
         &--image {
             width: 550px;
@@ -117,9 +118,10 @@
         }
 
         &--time {
-            display: inline-block;
-            float: right;
-            padding-top: 10px;
+            display: flex;
+            position: absolute;
+            right: 15px;
+            bottom: 10px;
             color: $font-color-grey;
             font-size: 12px;
         }
@@ -127,17 +129,24 @@
         &--content {
             overflow: hidden;
             text-overflow: ellipsis;
+            padding-bottom: 10px;
         }
 
         &--actions {
-            display: inline-block;
+            display: flex;
+            position: absolute;
+            right: 15px;
+            bottom: 10px;
             color: $font-color-blue;
-            float: right;
             padding-top: 10px;
             a {
                 margin-left: 30px;
                 margin-right: 5px;
                 color: $font-color-blue;
+
+                &:hover {
+                    text-decoration: none;
+                }
             }
         }
 

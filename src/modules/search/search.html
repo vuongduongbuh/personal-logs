@@ -3,7 +3,7 @@
     <div class="pl-search">
       <div class="pl-search__input">
         <input value.bind="searchValue" type="text" placeholder="Search for anything" change.delegate="search()">
-        <span class="glyphicon glyphicon-search"></span>
+        <span class="icon-search"></span>
         <span show.bind="isSearching" class="pl-loading"></span>
       </div>
 
@@ -38,7 +38,7 @@
           <!-- feed actions -->
           <div class="pl-feed__feed--actions" show.bind="isFeedHovered">
             <a class="btn-tooltip" data-tooltip-content="${'.' + entry.id}">
-              <span class="glyphicon glyphicon-option-horizontal"></span>
+              <span class="icon-more"></span>
             </a>
 
             <div class="tooltip_templates" style="display: none">
@@ -63,13 +63,13 @@
           <div class="pl-feed__compose--actions">
             <div>
               <a click.trigger="triggerClickInputFiles('edit')">
-                <img class="pl-icon pl-icon--user" src="./assets/img/icon-camera.png">
+                <span class="icon-camera"> </span>
               </a>
             </div>
 
             <div>
               <h4>${entryLength}</h4>
-              <button type="button" class="btn btn-primary ladda-button pl-btn--done" data-style="zoom-out" click.delegate="updateEntry(entryClone, $index)"
+              <button type="button" class="btn btn--primary ladda-button pl-btn--done" data-style="zoom-out" click.delegate="updateEntry(entryClone, $index)"
                 disabled.bind="!entryClone.content.trim()">
                 ${'GENERAL.BTN.DONE' | t}
                 </button>
