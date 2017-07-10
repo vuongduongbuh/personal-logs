@@ -59,7 +59,7 @@
           show.bind="!entry.isEdited">
 
           <div class="pl-feed__feed--content">
-            <div innerhtml="${entry.content | sanitizeHTML}"></div>
+            <div innerhtml="${entry.contentWithLinker | sanitizeHTML}"></div>
           </div>
 
           <div class="pl-feed__feed--image" if.bind="entry.media">

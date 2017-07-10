@@ -60,6 +60,7 @@ export class Feed {
         this.entries = entries
           .map(entry => {
             entry.createdAt = moment(entry.createdAt).format(AppConstants.dateFormat);
+            entry.contentWithLinker = autolinker.link(entry.content);
             return entry;
           });
 
@@ -82,6 +83,8 @@ export class Feed {
     let laddaDoneBtn = Ladda.create(document.querySelector('.pl-btn--done'));
     laddaDoneBtn.start();
     this.newEntry = this.convertTextToFeedEntry(this.newEntry);
+
+    console.log(this.newEntry);
     return this.appService.uploadFiles(this.newEntry.file)
       .then((path) => {
         if (path) {
@@ -180,9 +183,6 @@ export class Feed {
       entry.file = entry.selectedFiles[0];
     }
     entry.rawContent = _.cloneDeep(entry.content);
-
-    //parse links
-    entry.content = autolinker.link(entry.content);
 
     return entry;
   }
